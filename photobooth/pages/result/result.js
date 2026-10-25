@@ -1,3 +1,5 @@
+const { buildShare } = require("../../utils/share");
+
 Page({
   data: {
     resultPath: "",
@@ -54,8 +56,16 @@ Page({
     });
   },
 
+  onPromo() {
+    wx.navigateTo({ url: "/pages/promo/promo" });
+  },
+
   onAgain() {
     getApp().resetSession();
     wx.reLaunch({ url: "/pages/index/index" });
+  },
+
+  onShareAppMessage() {
+    return buildShare({ title: "我在一刻拍了一套大头贴，你也来！" });
   },
 });

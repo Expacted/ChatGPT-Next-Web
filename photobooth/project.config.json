@@ -37,6 +37,7 @@
   "libVersion": "3.5.5",
   "appid": "touristappid",
   "projectname": "yike-photobooth",
+  "cloudfunctionRoot": "cloudfunctions/",
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",

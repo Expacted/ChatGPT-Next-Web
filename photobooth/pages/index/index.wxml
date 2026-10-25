@@ -7,6 +7,10 @@
     <text class="brand-en">YIKE PHOTOBOOTH</text>
   </view>
 
+  <view class="invite-banner" wx:if="{{fromInvite}}">
+    好友邀请码 {{fromInvite}} · 欢迎来拍
+  </view>
+
   <view class="hero-visual" aria-hidden="true">
     <view class="strip-mock">
       <view class="slot s1"></view>
@@ -19,10 +23,14 @@
 
   <view class="copy">
     <text class="headline">拍下此刻，\n拼成一条回忆。</text>
-    <text class="sub">倒计时连拍 · 滤镜边框 · 一键保存相册\n个人本地制作，无需服务器</text>
+    <text class="sub">拍摄 · 预约 · 分享推广\n先跑通流程，预约可开微信提醒</text>
   </view>
 
   <button class="cta" bindtap="onStart">开始拍摄</button>
-  <view class="hint">参考悦时刻类大头贴流程 · 零后端最省方案</view>
+  <view class="action-row">
+    <button class="cta cta-ghost action-btn" bindtap="onBook">预约档期</button>
+    <button class="cta cta-ghost action-btn" bindtap="onPromo">分享推广</button>
+  </view>
+  <view class="hint" bindtap="onMyBookings">我的预约 ›</view>
   <view class="safe-bottom"></view>
 </view>

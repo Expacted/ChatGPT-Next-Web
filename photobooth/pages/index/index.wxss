@@ -23,6 +23,19 @@
   z-index: 1;
 }
 
+.invite-banner {
+  position: relative;
+  z-index: 1;
+  margin-top: 24rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+  align-self: flex-start;
+  font-size: 22rpx;
+  color: var(--ink);
+  background: rgba(232, 93, 76, 0.18);
+  border: 2rpx solid rgba(232, 93, 76, 0.35);
+}
+
 .hero-visual {
   margin: 48rpx 0 24rpx;
   display: flex;
@@ -78,6 +91,17 @@
   position: relative;
   z-index: 1;
   margin-top: auto;
+}
+
+.action-row {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  margin-top: 0;
 }
 
 .hint {

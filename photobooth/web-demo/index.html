@@ -26,11 +26,80 @@
           <span>一刻</span>
         </div>
       </div>
+      <div class="invite-banner hidden" id="invite-banner"></div>
       <div class="copy">
         <h2>拍下此刻，<br />拼成一条回忆。</h2>
-        <p>倒计时连拍 · 滤镜边框 · 一键下载<br />参考悦时刻类大头贴流程 · 零后端</p>
+        <p>拍摄 · 预约 · 分享推广<br />先跑通流程，预约可开提醒</p>
       </div>
       <button class="cta" id="btn-start">开始拍摄</button>
+      <div class="action-row">
+        <button class="cta ghost action-btn" id="btn-book-home">预约档期</button>
+        <button class="cta ghost action-btn" id="btn-promo-home">分享推广</button>
+      </div>
+      <p class="hint linkish" id="btn-my-bookings">我的预约 ›</p>
+    </section>
+
+    <section class="screen hidden" data-screen="book" id="screen-book">
+      <h2 class="headline-sm">预约拍摄档期</h2>
+      <p class="sub">选好时间，打开提醒开关（演示版写入本机）</p>
+      <label class="field-label">昵称</label>
+      <input class="input" id="book-name" placeholder="怎么称呼你" maxlength="20" />
+      <label class="field-label">日期</label>
+      <input class="input" id="book-date" type="date" />
+      <label class="field-label">时段</label>
+      <div class="chip-row" id="book-slots"></div>
+      <label class="field-label">人数</label>
+      <div class="people">
+        <button type="button" class="step" id="people-dec">−</button>
+        <strong id="people-num">2</strong>
+        <button type="button" class="step" id="people-inc">+</button>
+      </div>
+      <label class="field-label">备注</label>
+      <input class="input" id="book-note" placeholder="如：生日派对" maxlength="40" />
+      <div class="remind-card" id="remind-toggle">
+        <div>
+          <strong>开拍前提醒</strong>
+          <p class="sub" style="margin:6px 0 0">演示：浏览器 Notification（需授权）</p>
+        </div>
+        <div class="switch on" id="remind-switch"><div class="knob"></div></div>
+      </div>
+      <button class="cta" id="btn-book-submit">确认预约</button>
+      <button class="cta ghost" id="btn-book-back">返回</button>
+    </section>
+
+    <section class="screen hidden" data-screen="book-success" id="screen-book-success">
+      <div class="ok-mark">✓</div>
+      <h2 class="headline-sm">预约已确认</h2>
+      <p class="sub" id="book-success-sub"></p>
+      <div class="card" id="book-success-card"></div>
+      <button class="cta" id="btn-share-booking">复制分享文案</button>
+      <button class="cta ghost" id="btn-book-home2">回首页</button>
+      <button class="cta ghost" id="btn-book-list2">查看我的预约</button>
+    </section>
+
+    <section class="screen hidden" data-screen="book-list" id="screen-book-list">
+      <h2 class="headline-sm">我的预约</h2>
+      <div id="book-list"></div>
+      <button class="cta" id="btn-book-again">去预约</button>
+      <button class="cta ghost" id="btn-list-home">回首页</button>
+    </section>
+
+    <section class="screen hidden" data-screen="promo" id="screen-promo">
+      <h2 class="headline-sm">分享推广</h2>
+      <p class="sub">复制带邀请码的链接，发给好友</p>
+      <div class="code-card">
+        <div class="code-label">我的邀请码</div>
+        <div class="code" id="promo-code">YK0000</div>
+        <button type="button" class="copy-btn" id="btn-copy-code">复制邀请码</button>
+      </div>
+      <ol class="promo-steps">
+        <li>复制下方推广链接发给好友</li>
+        <li>好友打开后首页会显示邀请码</li>
+        <li>好友预约时会带上来源</li>
+      </ol>
+      <button class="cta" id="btn-copy-link">复制推广链接</button>
+      <button class="cta ghost" id="btn-promo-book">邀请好友来预约</button>
+      <button class="cta ghost" id="btn-promo-back">回首页</button>
     </section>
 
     <section class="screen hidden" data-screen="layout" id="screen-layout">
@@ -82,6 +151,7 @@
         <img id="result-img" alt="大头贴结果" />
       </div>
       <a class="cta" id="btn-download" download="yike-photobooth.jpg">下载大头贴</a>
+      <button class="cta ghost" id="btn-result-promo">去推广</button>
       <button class="cta ghost" id="btn-again">再拍一套</button>
     </section>
   </div>

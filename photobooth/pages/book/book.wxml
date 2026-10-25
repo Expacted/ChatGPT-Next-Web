@@ -1,0 +1,60 @@
+<view class="page">
+  <view class="headline" style="margin-top:0;font-size:34rpx;">预约拍摄档期</view>
+  <view class="sub">选好时间，开启微信提醒，开拍前会通知你</view>
+
+  <view class="form">
+    <view class="field">
+      <text class="label">昵称</text>
+      <input class="input" placeholder="怎么称呼你" value="{{name}}" bindinput="onName" maxlength="20" />
+    </view>
+    <view class="field">
+      <text class="label">手机（可选）</text>
+      <input class="input" type="number" placeholder="方便联系" value="{{phone}}" bindinput="onPhone" maxlength="11" />
+    </view>
+    <view class="field">
+      <text class="label">日期</text>
+      <picker mode="date" value="{{date}}" start="{{minDate}}" bindchange="onDate">
+        <view class="picker">{{date || "选择日期"}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <text class="label">时段</text>
+      <view class="chip-row">
+        <view
+          wx:for="{{slots}}"
+          wx:key="*this"
+          class="chip {{time === item ? 'active' : ''}}"
+          data-time="{{item}}"
+          bindtap="onTime"
+        >{{item}}</view>
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">人数</text>
+      <view class="people">
+        <view class="step" bindtap="decPeople">−</view>
+        <text class="num">{{people}}</text>
+        <view class="step" bindtap="incPeople">+</view>
+      </view>
+    </view>
+    <view class="field">
+      <text class="label">备注</text>
+      <input class="input" placeholder="如：生日派对 / 想要四格" value="{{note}}" bindinput="onNote" maxlength="40" />
+    </view>
+
+    <view class="remind-card" bindtap="toggleRemind">
+      <view class="remind-left">
+        <text class="remind-title">微信提醒</text>
+        <text class="remind-desc">开拍前约 {{leadMinutes}} 分钟推送订阅消息</text>
+      </view>
+      <view class="switch {{remind ? 'on' : ''}}">
+        <view class="knob"></view>
+      </view>
+    </view>
+  </view>
+
+  <button class="cta" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">
+    确认预约
+  </button>
+  <view class="hint">未配置云开发时会先保存在本机，流程可完整走通</view>
+</view>

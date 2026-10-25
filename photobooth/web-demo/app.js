@@ -72,6 +72,9 @@ const FRAMES = [
   { id: "sky", color: "#D6EAF8", name: "天空" },
 ];
 
+const SLOTS = ["10:00", "11:00", "14:00", "15:00", "16:00", "19:00", "20:00"];
+const BOOK_KEY = "yike_bookings_web";
+
 const state = {
   layoutId: "strip4",
   filterId: "none",
@@ -80,6 +83,12 @@ const state = {
   selected: [],
   stream: null,
   resultUrl: "",
+  bookTime: "14:00",
+  people: 2,
+  remind: true,
+  inviteCode: "",
+  fromInvite: "",
+  lastBooking: null,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -359,7 +368,167 @@ function resetAll() {
   state.layoutId = "strip4";
   state.filterId = "none";
   state.frameColor = "#FFF8F0";
+  showHome();
+}
+
+function getInviteCode() {
+  let code = localStorage.getItem("yike_invite_code");
+  if (!code) {
+    code = `YK${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    localStorage.setItem("yike_invite_code", code);
+  }
+  state.inviteCode = code;
+  return code;
+}
+
+function readInviteFromUrl() {
+  const params = new URLSearchParams(location.search);
+  const code = params.get("code") || params.get("invite") || "";
+  if (code) {
+    state.fromInvite = code;
+    localStorage.setItem("yike_from_invite", code);
+    const map = JSON.parse(localStorage.getItem("yike_invite_opens") || "{}");
+    map[code] = (map[code] || 0) + 1;
+    localStorage.setItem("yike_invite_opens", JSON.stringify(map));
+  } else {
+    state.fromInvite = localStorage.getItem("yike_from_invite") || "";
+  }
+}
+
+function showHome() {
+  const banner = $("invite-banner");
+  if (state.fromInvite) {
+    banner.textContent = `好友邀请码 ${state.fromInvite} · 欢迎来拍`;
+    banner.classList.remove("hidden");
+  } else {
+    banner.classList.add("hidden");
+  }
   show("home");
+}
+
+function listBookings() {
+  try {
+    return JSON.parse(localStorage.getItem(BOOK_KEY) || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveBooking(booking) {
+  const list = listBookings();
+  list.unshift(booking);
+  localStorage.setItem(BOOK_KEY, JSON.stringify(list));
+}
+
+function todayInputValue() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function openBook() {
+  $("book-date").value = todayInputValue();
+  $("book-date").min = todayInputValue();
+  $("people-num").textContent = String(state.people);
+  const row = $("book-slots");
+  row.innerHTML = SLOTS.map(
+    (t) =>
+      `<button type="button" class="chip ${state.bookTime === t ? "active" : ""}" data-time="${t}">${t}</button>`
+  ).join("");
+  row.querySelectorAll(".chip").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.bookTime = btn.dataset.time;
+      openBook();
+    });
+  });
+  $("remind-switch").classList.toggle("on", state.remind);
+  show("book");
+}
+
+async function submitBook() {
+  const name = $("book-name").value.trim();
+  const date = $("book-date").value;
+  const note = $("book-note").value.trim();
+  if (!name) {
+    alert("请填写昵称");
+    return;
+  }
+  if (!date || !state.bookTime) {
+    alert("请选择档期");
+    return;
+  }
+
+  let remindOk = false;
+  if (state.remind && "Notification" in window) {
+    const perm = await Notification.requestPermission();
+    remindOk = perm === "granted";
+    if (remindOk) {
+      // 演示：约 3 秒后弹一次提醒（真机小程序用订阅消息 + 云函数定时）
+      setTimeout(() => {
+        new Notification("一刻 Photobooth 预约提醒", {
+          body: `${date} ${state.bookTime} 档期快到了，记得来拍哦`,
+        });
+      }, 3000);
+    }
+  }
+
+  const booking = {
+    id: `b_${Date.now()}`,
+    name,
+    date,
+    time: state.bookTime,
+    people: state.people,
+    note,
+    remind: state.remind,
+    remindAccepted: remindOk,
+    inviteCode: state.fromInvite || "",
+    createdAt: new Date().toISOString(),
+  };
+  saveBooking(booking);
+  state.lastBooking = booking;
+  $("book-success-sub").textContent = `${date} ${state.bookTime} · ${state.people} 人`;
+  $("book-success-card").innerHTML = `
+    <div class="row"><span>昵称</span><strong>${name}</strong></div>
+    <div class="row"><span>提醒</span><strong>${
+      state.remind ? (remindOk ? "已授权（演示通知）" : "未授权/不支持") : "未开启"
+    }</strong></div>
+    <div class="row"><span>来源</span><strong>${booking.inviteCode || "自然访问"}</strong></div>
+  `;
+  show("book-success");
+}
+
+function renderBookList() {
+  const list = listBookings();
+  const wrap = $("book-list");
+  if (!list.length) {
+    wrap.innerHTML = `<p class="sub">还没有预约</p>`;
+  } else {
+    wrap.innerHTML = list
+      .map(
+        (b) => `<div class="book-item">
+        <div class="book-item-top"><strong>${b.date} ${b.time}</strong><span>${
+          b.remind && b.remindAccepted ? "已提醒" : b.remind ? "待提醒" : "无提醒"
+        }</span></div>
+        <div class="sub">${b.name} · ${b.people} 人</div>
+      </div>`
+      )
+      .join("");
+  }
+  show("book-list");
+}
+
+function openPromo() {
+  const code = getInviteCode();
+  $("promo-code").textContent = code;
+  show("promo");
+}
+
+function promoLink() {
+  const code = getInviteCode();
+  const url = new URL(location.href);
+  url.searchParams.set("code", code);
+  url.searchParams.set("from", "share");
+  url.hash = "";
+  return url.toString();
 }
 
 function bind() {
@@ -390,6 +559,52 @@ function bind() {
   });
   $("btn-compose").addEventListener("click", compose);
   $("btn-again").addEventListener("click", resetAll);
+
+  $("btn-book-home").addEventListener("click", openBook);
+  $("btn-promo-home").addEventListener("click", openPromo);
+  $("btn-my-bookings").addEventListener("click", renderBookList);
+  $("btn-book-back").addEventListener("click", showHome);
+  $("btn-book-submit").addEventListener("click", submitBook);
+  $("btn-book-home2").addEventListener("click", showHome);
+  $("btn-book-list2").addEventListener("click", renderBookList);
+  $("btn-book-again").addEventListener("click", openBook);
+  $("btn-list-home").addEventListener("click", showHome);
+  $("btn-promo-book").addEventListener("click", openBook);
+  $("btn-promo-back").addEventListener("click", showHome);
+  $("btn-result-promo").addEventListener("click", openPromo);
+
+  $("people-inc").addEventListener("click", () => {
+    state.people = Math.min(12, state.people + 1);
+    $("people-num").textContent = String(state.people);
+  });
+  $("people-dec").addEventListener("click", () => {
+    state.people = Math.max(1, state.people - 1);
+    $("people-num").textContent = String(state.people);
+  });
+  $("remind-toggle").addEventListener("click", () => {
+    state.remind = !state.remind;
+    $("remind-switch").classList.toggle("on", state.remind);
+  });
+
+  $("btn-copy-code").addEventListener("click", async () => {
+    await navigator.clipboard.writeText(getInviteCode());
+    alert("已复制邀请码");
+  });
+  $("btn-copy-link").addEventListener("click", async () => {
+    await navigator.clipboard.writeText(promoLink());
+    alert("已复制推广链接");
+  });
+  $("btn-share-booking").addEventListener("click", async () => {
+    const b = state.lastBooking;
+    const text = b
+      ? `我预约了 ${b.date} ${b.time} 的一刻拍摄，一起？ ${promoLink()}`
+      : promoLink();
+    await navigator.clipboard.writeText(text);
+    alert("分享文案已复制");
+  });
 }
 
+readInviteFromUrl();
+getInviteCode();
 bind();
+showHome();

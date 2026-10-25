@@ -5,7 +5,11 @@
     "pages/shoot/shoot",
     "pages/select/select",
     "pages/decorate/decorate",
-    "pages/result/result"
+    "pages/result/result",
+    "pages/book/book",
+    "pages/book/success",
+    "pages/book/list",
+    "pages/promo/promo"
   ],
   "window": {
     "navigationBarBackgroundColor": "#121214",
@@ -26,6 +30,7 @@
     "chooseImage",
     "saveImageToPhotosAlbum"
   ],
+  "cloud": true,
   "style": "v2",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
