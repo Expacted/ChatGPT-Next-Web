@@ -9,9 +9,9 @@
 
   <view class="brand-card card">
     <view class="brand-row">
-      <view class="logo">一刻</view>
+      <view class="logo">{{brandShort}}</view>
       <view class="brand-meta">
-        <text class="brand-name">一刻 · PHOTO BOOTH</text>
+        <text class="brand-name">{{brand}}</text>
         <text class="brand-area">服务城市 {{areas}}</text>
       </view>
     </view>
@@ -44,22 +44,19 @@
     </view>
   </view>
 
-  <view class="content-card card" bindtap="onAbout">
-    <view class="content-cover cover-a">
-      <text class="cover-caption">中高端定制 · 全案用心</text>
+  <view
+    class="content-card card"
+    wx:for="{{cards}}"
+    wx:key="id"
+    data-link="{{item.link}}"
+    bindtap="onCard"
+  >
+    <view class="content-cover {{item.id === 'price' ? 'cover-b' : 'cover-a'}}">
+      <image wx:if="{{item.cover}}" class="cover-img" src="{{item.cover}}" mode="aspectFill" />
+      <text class="cover-caption">{{item.coverCaption}}</text>
     </view>
     <view class="content-body">
-      <text class="content-title">选择一刻 · PHOTO BOOTH 您将会得到</text>
-      <text class="content-link">查看详情 ></text>
-    </view>
-  </view>
-
-  <view class="content-card card" bindtap="onPrice">
-    <view class="content-cover cover-b">
-      <text class="cover-caption">PHOTO BOOTH 租赁套餐</text>
-    </view>
-    <view class="content-body">
-      <text class="content-title">价目服务表（必看）</text>
+      <text class="content-title">{{item.title}}</text>
       <text class="content-link">查看详情 ></text>
     </view>
   </view>

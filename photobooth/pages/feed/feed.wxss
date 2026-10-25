@@ -53,32 +53,30 @@
   overflow: hidden;
 }
 
+.grid-1 {
+  grid-template-columns: 1fr;
+}
 .grid-2 {
   grid-template-columns: 1fr 1fr;
 }
-
 .grid-3 {
   grid-template-columns: 1fr 1fr 1fr;
 }
-
+.grid-4,
+.grid-5,
+.grid-6,
+.grid-7,
+.grid-8,
 .grid-9 {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
 .cell {
+  width: 100%;
   aspect-ratio: 1;
   background: #e8ddd2;
+  display: block;
 }
-
-.tone-1 { background: linear-gradient(135deg, #f3d0c4, #e8b8c8); }
-.tone-2 { background: linear-gradient(135deg, #d9c8f0, #c4dce8); }
-.tone-3 { background: linear-gradient(135deg, #e8dcc8, #f0c8d0); }
-.tone-4 { background: linear-gradient(135deg, #cfe6dc, #e8d4c4); }
-.tone-5 { background: linear-gradient(135deg, #f0d8b8, #d8c4e8); }
-.tone-6 { background: linear-gradient(135deg, #e0d0c4, #f0c8c0); }
-.tone-7 { background: linear-gradient(135deg, #d0dce8, #e8d0dc); }
-.tone-8 { background: linear-gradient(135deg, #e8e0d0, #c8d8d0); }
-.tone-9 { background: linear-gradient(135deg, #f0d0d8, #d8c8e0); }
 
 .end {
   text-align: center;

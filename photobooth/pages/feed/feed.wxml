@@ -1,21 +1,26 @@
 <scroll-view scroll-y class="page feed-page" enhanced show-scrollbar="{{false}}">
   <view class="card post" wx:for="{{posts}}" wx:key="id">
     <view class="post-head">
-      <view class="avatar">一刻</view>
+      <view class="avatar">{{brandShort}}</view>
       <view>
-        <text class="name">一刻 · PHOTO BOOTH</text>
+        <text class="name">{{brand}}</text>
         <text class="time">{{item.time}}</text>
       </view>
     </view>
     <text class="text">{{item.text}}</text>
     <view class="grid grid-{{item.images.length}}">
-      <view
+      <image
         wx:for="{{item.images}}"
         wx:for-item="img"
         wx:key="*this"
-        class="cell tone-{{img}}"
-      ></view>
+        class="cell"
+        src="{{img}}"
+        mode="aspectFill"
+        binderror="onImgError"
+        data-id="{{item.id}}"
+        data-index="{{index}}"
+      />
     </view>
   </view>
-  <view class="end">已经到底啦</view>
+  <view class="end">已经到底啦 · 在 utils/config.js 的 feedPosts 里改动态</view>
 </scroll-view>

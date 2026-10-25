@@ -1,24 +1,14 @@
+const config = require("../../utils/config");
+
 Page({
   data: {
-    posts: [
-      {
-        id: 1,
-        time: "2026-10-14 12:58",
-        text: "一刻日记分享 · 婚礼现场即拍即印，宾客带走专属四格。",
-        images: [1, 2],
-      },
-      {
-        id: 2,
-        time: "2026-10-08 18:20",
-        text: "生日宴布置花絮：道具、模板、留言簿一次备齐。",
-        images: [3, 4, 5, 6, 7, 8, 9, 1, 2],
-      },
-      {
-        id: 3,
-        time: "2026-09-28 11:05",
-        text: "商场快闪回顾，感谢每一位来打卡的朋友。",
-        images: [4, 7, 3],
-      },
-    ],
+    brand: config.brand,
+    brandShort: config.brandShort || "一刻",
+    posts: config.feedPosts || [],
+  },
+
+  onImgError(e) {
+    // 图片缺失时不强打断；可在控制台看到是哪张
+    console.warn("feed image missing", e.currentTarget.dataset);
   },
 });

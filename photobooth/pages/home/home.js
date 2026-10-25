@@ -6,7 +6,10 @@ Page({
     slogan: config.slogan,
     areas: config.serviceAreas,
     phone: config.phone,
-    tags: ["婚礼", "生日", "派对", "活动", "品牌活动"],
+    brand: config.brand,
+    brandShort: config.brandShort || "一刻",
+    tags: config.homeTags || [],
+    cards: config.homeCards || [],
   },
 
   onBook() {
@@ -26,7 +29,7 @@ Page({
     wx.navigateTo({ url: "/pages/layout/layout" });
   },
   onCall() {
-    wx.makePhoneCall({ phoneNumber: config.phone.replace(/\D/g, "") });
+    wx.makePhoneCall({ phoneNumber: String(config.phone).replace(/\D/g, "") });
   },
   onShare() {
     wx.showToast({ title: "点右上角分享给好友", icon: "none" });
@@ -36,6 +39,15 @@ Page({
       data: `${config.brand} · ${config.slogan}`,
       success: () => wx.showToast({ title: "已复制文案", icon: "success" }),
     });
+  },
+  onCard(e) {
+    const link = e.currentTarget.dataset.link;
+    if (!link) return;
+    if (link.indexOf("/pages/book/") === 0) {
+      wx.switchTab({ url: "/pages/book/book" });
+      return;
+    }
+    wx.navigateTo({ url: link });
   },
 
   onShareAppMessage() {
