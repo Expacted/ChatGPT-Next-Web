@@ -1,0 +1,70 @@
+.preview-box {
+  margin: 0 auto 40rpx;
+  width: 320rpx;
+  padding: 20rpx 20rpx 56rpx;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  box-shadow: 0 24rpx 60rpx rgba(0, 0, 0, 0.35);
+  transition: background 0.25s ease;
+}
+
+.preview-box.layout-grid4 {
+  width: 520rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12rpx;
+  padding-bottom: 64rpx;
+}
+
+.preview-box.layout-pair2 {
+  width: 560rpx;
+  flex-direction: row;
+  padding-bottom: 64rpx;
+}
+
+.preview-img {
+  width: 100%;
+  height: 210rpx;
+  border-radius: 6rpx;
+  background: #ddd;
+}
+
+.preview-img.layout-grid4,
+.preview-img.layout-pair2 {
+  height: 240rpx;
+}
+
+.preview-brand {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 20rpx;
+  letter-spacing: 0.12em;
+  margin-top: 8rpx;
+}
+
+.colors {
+  display: flex;
+  gap: 20rpx;
+  flex-wrap: wrap;
+}
+
+.color {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  border: 4rpx solid transparent;
+  box-shadow: inset 0 0 0 2rpx rgba(0, 0, 0, 0.08);
+}
+
+.color.active {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.hidden-canvas {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}

@@ -1,0 +1,119 @@
+page {
+  --bg: #121214;
+  --bg-soft: #1c1c20;
+  --ink: #f5f1ea;
+  --muted: rgba(245, 241, 234, 0.58);
+  --accent: #e85d4c;
+  --accent-soft: #ff8f7a;
+  --paper: #fff8f0;
+  --line: rgba(245, 241, 234, 0.12);
+  --ok: #3ecf8e;
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC",
+    "Microsoft YaHei", sans-serif;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+view,
+text,
+image,
+button,
+scroll-view {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 32rpx 40rpx 80rpx;
+  background:
+    radial-gradient(120% 80% at 10% -10%, rgba(232, 93, 76, 0.22), transparent 55%),
+    radial-gradient(90% 70% at 100% 0%, rgba(255, 184, 120, 0.12), transparent 50%),
+    linear-gradient(180deg, #17171b 0%, #121214 45%, #0e0e10 100%);
+}
+
+.brand {
+  font-size: 56rpx;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+
+.brand-en {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.headline {
+  margin-top: 28rpx;
+  font-size: 40rpx;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.sub {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.cta {
+  margin-top: 48rpx;
+  height: 96rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #e85d4c 0%, #ff8f7a 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.cta::after {
+  border: none;
+}
+
+.cta-ghost {
+  background: transparent;
+  border: 2rpx solid var(--line);
+  color: var(--ink);
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.chip {
+  padding: 16rpx 28rpx;
+  border-radius: 999rpx;
+  border: 2rpx solid var(--line);
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+.chip.active {
+  border-color: var(--accent);
+  color: var(--ink);
+  background: rgba(232, 93, 76, 0.16);
+}
+
+.safe-bottom {
+  height: env(safe-area-inset-bottom);
+}

@@ -1,0 +1,44 @@
+<view class="page">
+  <view class="preview-box {{layoutClass}}" style="background: {{frameColor}};">
+    <image
+      wx:for="{{selected}}"
+      wx:key="*this"
+      class="preview-img {{layoutClass}}"
+      src="{{item}}"
+      mode="aspectFill"
+      style="filter: {{filterCss}};"
+    />
+    <text class="preview-brand" style="color: {{brandColor}};">一刻 · Photobooth</text>
+  </view>
+
+  <view class="section-title">边框颜色</view>
+  <view class="colors">
+    <view
+      wx:for="{{frames}}"
+      wx:key="id"
+      class="color {{frameColor === item.color ? 'active' : ''}}"
+      style="background: {{item.color}};"
+      data-color="{{item.color}}"
+      bindtap="onColor"
+    ></view>
+  </view>
+
+  <view class="section-title" style="margin-top: 36rpx;">滤镜微调</view>
+  <view class="chip-row">
+    <view
+      wx:for="{{filters}}"
+      wx:key="id"
+      class="chip {{filterId === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onFilter"
+    >{{item.name}}</view>
+  </view>
+
+  <button class="cta" bindtap="onCompose" loading="{{composing}}">生成大头贴</button>
+
+  <canvas
+    canvas-id="stripCanvas"
+    class="hidden-canvas"
+    style="width: {{canvasW}}px; height: {{canvasH}}px;"
+  ></canvas>
+</view>

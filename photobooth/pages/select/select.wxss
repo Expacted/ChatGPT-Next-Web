@@ -1,0 +1,40 @@
+.shot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  margin: 36rpx 0 24rpx;
+}
+
+.shot {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 20rpx;
+  overflow: hidden;
+  border: 4rpx solid transparent;
+  background: var(--bg-soft);
+}
+
+.shot.on {
+  border-color: var(--accent);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+}
+
+.badge {
+  position: absolute;
+  top: 16rpx;
+  left: 16rpx;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 22rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

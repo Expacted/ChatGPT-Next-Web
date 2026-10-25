@@ -1,0 +1,43 @@
+<view class="page shoot-page">
+  <view class="status">
+    <text class="step">第 {{currentIndex + 1}} / {{total}} 张</text>
+    <text class="tip">{{statusText}}</text>
+  </view>
+
+  <view class="camera-wrap">
+    <camera
+      wx:if="{{cameraReady}}"
+      class="camera {{filterClass}}"
+      device-position="front"
+      flash="off"
+      resolution="high"
+      binderror="onCameraError"
+    />
+    <view wx:else class="camera-fallback">
+      <text>需要相机权限才能拍摄</text>
+      <button class="cta" size="mini" bindtap="requestAuth">去授权</button>
+    </view>
+
+    <view class="countdown" wx:if="{{countdown > 0}}">{{countdown}}</view>
+    <view class="flash" wx:if="{{flash}}"></view>
+  </view>
+
+  <view class="thumbs">
+    <image
+      wx:for="{{shots}}"
+      wx:key="*this"
+      class="thumb"
+      src="{{item}}"
+      mode="aspectFill"
+    />
+    <view
+      wx:for="{{emptySlots}}"
+      wx:key="*this"
+      class="thumb empty"
+    ></view>
+  </view>
+
+  <button class="cta" bindtap="onShutter" disabled="{{busy}}">
+    {{busy ? "拍摄中…" : "开始倒计时连拍"}}
+  </button>
+</view>

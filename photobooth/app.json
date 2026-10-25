@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/layout/layout",
+    "pages/shoot/shoot",
+    "pages/select/select",
+    "pages/decorate/decorate",
+    "pages/result/result"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#121214",
+    "navigationBarTitleText": "一刻 Photobooth",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#121214",
+    "backgroundTextStyle": "light"
+  },
+  "permission": {
+    "scope.camera": {
+      "desc": "用于拍摄大头贴照片"
+    },
+    "scope.writePhotosAlbum": {
+      "desc": "用于将大头贴保存到相册"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseImage",
+    "saveImageToPhotosAlbum"
+  ],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

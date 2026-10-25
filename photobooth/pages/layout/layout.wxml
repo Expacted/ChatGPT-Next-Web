@@ -1,0 +1,33 @@
+<view class="page">
+  <view class="section-title">版式</view>
+  <view class="layout-grid">
+    <view
+      wx:for="{{layouts}}"
+      wx:key="id"
+      class="layout-card {{selected === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onPick"
+    >
+      <view class="preview preview-{{item.id}}">
+        <view wx:for="{{item.slots}}" wx:for-item="s" wx:key="*this" class="mini"></view>
+      </view>
+      <view class="meta">
+        <text class="name">{{item.name}}</text>
+        <text class="desc">{{item.desc}} · {{item.slots}} 张</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-title" style="margin-top: 48rpx;">拍摄滤镜</view>
+  <view class="chip-row">
+    <view
+      wx:for="{{filters}}"
+      wx:key="id"
+      class="chip {{filterId === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onFilter"
+    >{{item.name}}</view>
+  </view>
+
+  <button class="cta" bindtap="onNext">下一步 · 开始连拍</button>
+</view>

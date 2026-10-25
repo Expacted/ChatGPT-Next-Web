@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="headline" style="margin-top:0;font-size:34rpx;">选出你最满意的 {{need}} 张</view>
+  <view class="sub" style="margin-top:8rpx;">已选 {{selectedCount}} / {{need}}</view>
+
+  <view class="shot-grid">
+    <view
+      wx:for="{{shotItems}}"
+      wx:key="path"
+      class="shot {{item.on ? 'on' : ''}}"
+      data-path="{{item.path}}"
+      bindtap="onToggle"
+    >
+      <image src="{{item.path}}" mode="aspectFill" class="img" />
+      <view class="badge" wx:if="{{item.order > 0}}">{{item.order}}</view>
+    </view>
+  </view>
+
+  <button class="cta" bindtap="onNext" disabled="{{selectedCount !== need}}">
+    下一步 · 装饰边框
+  </button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onReshoot">重新拍摄</button>
+</view>

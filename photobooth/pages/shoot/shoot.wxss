@@ -1,0 +1,121 @@
+.shoot-page {
+  padding-bottom: 40rpx;
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24rpx;
+}
+
+.step {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.tip {
+  font-size: 24rpx;
+  color: var(--muted);
+}
+
+.camera-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 28rpx;
+  overflow: hidden;
+  background: #000;
+  border: 2rpx solid var(--line);
+}
+
+.camera {
+  width: 100%;
+  height: 100%;
+}
+
+.camera-fallback {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  color: var(--muted);
+}
+
+.countdown {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 180rpx;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.2);
+  animation: pop 0.35s ease;
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  animation: flash 0.25s ease;
+}
+
+.thumbs {
+  display: flex;
+  gap: 12rpx;
+  margin: 28rpx 0 8rpx;
+  overflow-x: auto;
+}
+
+.thumb {
+  width: 120rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+  background: var(--bg-soft);
+}
+
+.thumb.empty {
+  border: 2rpx dashed var(--line);
+}
+
+.filter-mono {
+  filter: grayscale(1);
+}
+.filter-warm {
+  filter: sepia(0.25) saturate(1.15) brightness(1.05);
+}
+.filter-cool {
+  filter: saturate(0.85) hue-rotate(15deg);
+}
+.filter-film {
+  filter: contrast(1.1) saturate(0.9);
+}
+.filter-soft {
+  filter: brightness(1.08) contrast(0.92);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes flash {
+  from {
+    opacity: 0.85;
+  }
+  to {
+    opacity: 0;
+  }
+}
