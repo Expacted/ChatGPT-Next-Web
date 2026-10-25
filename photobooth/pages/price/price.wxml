@@ -1,0 +1,35 @@
+<scroll-view scroll-y class="page price-page" enhanced show-scrollbar="{{false}}">
+  <view class="card hero-brand">
+    <view class="logo">一刻</view>
+    <text class="name">一刻</text>
+    <text class="en">photo booth</text>
+  </view>
+
+  <view class="card">
+    <text class="block-title">PHOTO BOOTH 租赁套餐</text>
+    <view class="early">{{earlyBirdNote}}</view>
+    <view class="pkg" wx:for="{{packages}}" wx:key="hours">
+      <text class="pkg-h">{{item.hours}} 小时</text>
+      <view class="pkg-price">
+        <text class="now">¥{{item.early}}</text>
+        <text class="old">¥{{item.price}}</text>
+      </view>
+      <text class="pkg-tag">早鸟价</text>
+    </view>
+    <view class="pkg custom">
+      <text class="pkg-h">活动主题定制</text>
+      <text class="pkg-tag">价格面议</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="block-title">服务说明</text>
+    <text class="p">服务城市：{{areas}}。市区内出行免费，超出范围另计交通费。</text>
+    <text class="p">定金 ¥{{deposit}} 锁定档期。活动前 20 天内取消定金不退；我方原因取消双倍退还定金。</text>
+    <text class="p">套餐含：时长内不限次拍摄打印、至少 2 名现场人员、留言簿、多套模板、手持道具。</text>
+    <text class="p">设备：热升华打印机，即拍即出。</text>
+  </view>
+
+  <button class="cta" bindtap="onBook">去预约档期</button>
+  <view class="bottom"></view>
+</scroll-view>

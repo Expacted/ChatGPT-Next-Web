@@ -1,41 +1,6 @@
-const { buildShare, getFromInvite } = require("../../utils/share");
-
+/** 兼容旧入口：跳到新首页 Tab */
 Page({
-  data: {
-    fromInvite: "",
-  },
-
   onShow() {
-    const fromInvite = getFromInvite() || getApp().globalData.inviteCode || "";
-    this.setData({ fromInvite });
-  },
-
-  onStart() {
-    getApp().resetSession();
-    wx.navigateTo({ url: "/pages/layout/layout" });
-  },
-
-  onBook() {
-    wx.navigateTo({ url: "/pages/book/book" });
-  },
-
-  onPromo() {
-    wx.navigateTo({ url: "/pages/promo/promo" });
-  },
-
-  onMyBookings() {
-    wx.navigateTo({ url: "/pages/book/list" });
-  },
-
-  onShareAppMessage() {
-    return buildShare({ title: "一刻 Photobooth · 一起来拍大头贴" });
-  },
-
-  onShareTimeline() {
-    const share = buildShare();
-    return {
-      title: share.title,
-      query: `from=timeline&code=${share.path.split("code=")[1] || ""}`,
-    };
+    wx.switchTab({ url: "/pages/home/home" });
   },
 });

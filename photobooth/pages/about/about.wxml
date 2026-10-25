@@ -1,0 +1,24 @@
+<scroll-view scroll-y class="page about-page" enhanced show-scrollbar="{{false}}">
+  <view class="banner">
+    <text class="banner-title">选择一刻 · PHOTO BOOTH\n您将会得到</text>
+  </view>
+
+  <view class="card">
+    <text class="tag">中高端定制</text>
+    <text class="h">让快乐，有迹可循</text>
+    <text class="p">不做流水线敷衍，全案用心定制。从模板、道具到现场动线，按活动主题一起打磨。</text>
+    <text class="p">设备：热升华即拍即印，宾客带走实体照片与电子版回忆。</text>
+  </view>
+
+  <view class="card">
+    <text class="h">你将获得</text>
+    <view class="li">· 时长内不限次拍摄与打印</view>
+    <view class="li">· 双人及以上现场服务</view>
+    <view class="li">· 多套模板 / 手持道具 / 留言互动</view>
+    <view class="li">· 可预约微信提醒，档期不踩空</view>
+  </view>
+
+  <button class="cta" bindtap="onBook">去活动预约</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onPrice">查看价目表</button>
+  <view class="bottom"></view>
+</scroll-view>

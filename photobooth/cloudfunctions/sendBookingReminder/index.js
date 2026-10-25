@@ -39,9 +39,24 @@ exports.main = async () => {
         templateId: TMPL_ID,
         page: "pages/book/list",
         data: {
-          thing1: { value: truncate(item.note || "一刻 Photobooth 拍摄", 20) },
-          time2: { value: `${item.date} ${item.time}` },
-          thing3: { value: truncate(`你好${item.name || ""}，档期快到了，记得来拍哦`, 20) },
+          thing1: {
+            value: truncate(
+              item.activityType || item.note || "一刻 PHOTO BOOTH 活动",
+              20
+            ),
+          },
+          time2: {
+            value: truncate(
+              `${item.date} ${item.packageLabel || item.time || ""}`.trim(),
+              20
+            ),
+          },
+          thing3: {
+            value: truncate(
+              `你好${item.name || ""}，档期快到了，记得确认现场安排`,
+              20
+            ),
+          },
         },
       });
       await db.collection("bookings").doc(item._id).update({

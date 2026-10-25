@@ -24,7 +24,7 @@ Page({
   },
 
   onBook() {
-    wx.navigateTo({ url: "/pages/book/book" });
+    wx.switchTab({ url: "/pages/book/book" });
   },
 
   onShareAppMessage() {

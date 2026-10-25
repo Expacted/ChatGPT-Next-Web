@@ -62,7 +62,7 @@ Page({
 
   onAgain() {
     getApp().resetSession();
-    wx.reLaunch({ url: "/pages/index/index" });
+    wx.switchTab({ url: "/pages/home/home" });
   },
 
   onShareAppMessage() {

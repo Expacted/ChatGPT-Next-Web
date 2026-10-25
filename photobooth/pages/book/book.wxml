@@ -1,60 +1,77 @@
-<view class="page">
-  <view class="headline" style="margin-top:0;font-size:34rpx;">预约拍摄档期</view>
-  <view class="sub">选好时间，开启微信提醒，开拍前会通知你</view>
+<scroll-view scroll-y class="page book-page" enhanced show-scrollbar="{{false}}">
+  <view class="head">
+    <text class="brand-line">一刻 · PHOTO BOOTH</text>
+    <text class="section-title">告诉我们，你想记录哪一天</text>
+    <text class="section-sub">填写活动信息后生成需求单，方便确认档期、模板与现场安排。</text>
+  </view>
 
-  <view class="form">
-    <view class="field">
-      <text class="label">昵称</text>
-      <input class="input" placeholder="怎么称呼你" value="{{name}}" bindinput="onName" maxlength="20" />
+  <view class="card block">
+    <view class="label"><text class="req">*</text>活动类型</view>
+    <view class="chip-row">
+      <view
+        wx:for="{{activityTypes}}"
+        wx:key="*this"
+        class="chip {{activityType === item ? 'active' : ''}}"
+        data-type="{{item}}"
+        bindtap="onType"
+      >{{item}}</view>
     </view>
-    <view class="field">
-      <text class="label">手机（可选）</text>
-      <input class="input" type="number" placeholder="方便联系" value="{{phone}}" bindinput="onPhone" maxlength="11" />
-    </view>
-    <view class="field">
-      <text class="label">日期</text>
-      <picker mode="date" value="{{date}}" start="{{minDate}}" bindchange="onDate">
-        <view class="picker">{{date || "选择日期"}}</view>
-      </picker>
-    </view>
-    <view class="field">
-      <text class="label">时段</text>
-      <view class="chip-row">
-        <view
-          wx:for="{{slots}}"
-          wx:key="*this"
-          class="chip {{time === item ? 'active' : ''}}"
-          data-time="{{item}}"
-          bindtap="onTime"
-        >{{item}}</view>
-      </view>
-    </view>
-    <view class="field">
-      <text class="label">人数</text>
-      <view class="people">
-        <view class="step" bindtap="decPeople">−</view>
-        <text class="num">{{people}}</text>
-        <view class="step" bindtap="incPeople">+</view>
-      </view>
-    </view>
-    <view class="field">
-      <text class="label">备注</text>
-      <input class="input" placeholder="如：生日派对 / 想要四格" value="{{note}}" bindinput="onNote" maxlength="40" />
-    </view>
+  </view>
 
-    <view class="remind-card" bindtap="toggleRemind">
-      <view class="remind-left">
-        <text class="remind-title">微信提醒</text>
-        <text class="remind-desc">开拍前约 {{leadMinutes}} 分钟推送订阅消息</text>
-      </view>
-      <view class="switch {{remind ? 'on' : ''}}">
-        <view class="knob"></view>
+  <view class="card block">
+    <view class="label"><text class="req">*</text>意向时长</view>
+    <view class="duration-row">
+      <view
+        wx:for="{{durations}}"
+        wx:key="hours"
+        class="duration {{duration === item.hours ? 'active' : ''}}"
+        data-hours="{{item.hours}}"
+        bindtap="onDuration"
+      >
+        <text class="d-label">{{item.label}}</text>
+        <text class="d-tip">{{item.tip}}</text>
       </view>
     </view>
   </view>
 
-  <button class="cta" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">
-    确认预约
-  </button>
-  <view class="hint">未配置云开发时会先保存在本机，流程可完整走通</view>
-</view>
+  <view class="card block field-card" bindtap="noop">
+    <view class="label"><text class="req">*</text>活动日期</view>
+    <picker mode="date" value="{{date}}" start="{{minDate}}" bindchange="onDate">
+      <view class="picker-line">
+        <text class="{{date ? '' : 'placeholder'}}">{{date || '请选择活动日期'}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </picker>
+  </view>
+
+  <view class="card block field-card">
+    <view class="label"><text class="req">*</text>活动城市</view>
+    <picker mode="selector" range="{{cities}}" value="{{cityIndex}}" bindchange="onCity">
+      <view class="picker-line">
+        <text class="{{city ? '' : 'placeholder'}}">{{city || '请选择活动城市'}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </picker>
+  </view>
+
+  <view class="card block">
+    <view class="label">联系人</view>
+    <input class="input" placeholder="怎么称呼你" value="{{name}}" bindinput="onName" maxlength="20" />
+    <view class="label" style="margin-top:24rpx;">手机号</view>
+    <input class="input" type="number" placeholder="方便确认档期" value="{{phone}}" bindinput="onPhone" maxlength="11" />
+    <view class="label" style="margin-top:24rpx;">备注</view>
+    <input class="input" placeholder="人数 / 场地 / 想要的模板" value="{{note}}" bindinput="onNote" maxlength="50" />
+  </view>
+
+  <view class="card remind-card" bindtap="toggleRemind">
+    <view>
+      <text class="remind-title">微信提醒</text>
+      <text class="remind-desc">开拍前约 {{leadMinutes}} 分钟推送订阅消息</text>
+    </view>
+    <view class="switch {{remind ? 'on' : ''}}"><view class="knob"></view></view>
+  </view>
+
+  <button class="cta" bindtap="onSubmit" loading="{{submitting}}">提交需求单</button>
+  <view class="foot-hint">提交后可在「我的-我的订单」查看</view>
+  <view class="home-bottom"></view>
+</scroll-view>

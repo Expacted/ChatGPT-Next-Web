@@ -1,610 +1,342 @@
-const LAYOUTS = [
-  {
-    id: "strip4",
-    name: "经典四格",
-    desc: "竖条大头贴",
-    slots: 4,
-    canvas: { w: 600, h: 1800 },
-    positions: [
-      { x: 48, y: 48, w: 504, h: 378 },
-      { x: 48, y: 450, w: 504, h: 378 },
-      { x: 48, y: 852, w: 504, h: 378 },
-      { x: 48, y: 1254, w: 504, h: 378 },
-    ],
-    footerY: 1680,
-  },
-  {
-    id: "strip3",
-    name: "三连拍",
-    desc: "竖条三格",
-    slots: 3,
-    canvas: { w: 600, h: 1400 },
-    positions: [
-      { x: 48, y: 48, w: 504, h: 378 },
-      { x: 48, y: 450, w: 504, h: 378 },
-      { x: 48, y: 852, w: 504, h: 378 },
-    ],
-    footerY: 1280,
-  },
-  {
-    id: "grid4",
-    name: "四宫格",
-    desc: "2×2 方形",
-    slots: 4,
-    canvas: { w: 1000, h: 1100 },
-    positions: [
-      { x: 40, y: 40, w: 440, h: 440 },
-      { x: 520, y: 40, w: 440, h: 440 },
-      { x: 40, y: 520, w: 440, h: 440 },
-      { x: 520, y: 520, w: 440, h: 440 },
-    ],
-    footerY: 1000,
-  },
-  {
-    id: "pair2",
-    name: "双人并排",
-    desc: "横版双图",
-    slots: 2,
-    canvas: { w: 1200, h: 700 },
-    positions: [
-      { x: 40, y: 40, w: 540, h: 540 },
-      { x: 620, y: 40, w: 540, h: 540 },
-    ],
-    footerY: 620,
-  },
+const CITIES = ["内江", "泸州", "自贡", "成都", "其他"];
+const TYPES = ["商场活动", "生日宴", "婚礼活动", "订婚宴", "升学宴", "毕业季", "其他"];
+const DURS = [
+  { h: 2, tip: "人气推荐" },
+  { h: 3, tip: "标准场次" },
+  { h: 4, tip: "大型活动推荐" },
 ];
-
-const FILTERS = [
-  { id: "none", name: "原片", css: "none" },
-  { id: "mono", name: "黑白", css: "grayscale(1) contrast(1.05)" },
-  { id: "warm", name: "暖阳", css: "sepia(0.25) saturate(1.15) brightness(1.05)" },
-  { id: "cool", name: "冷调", css: "saturate(0.85) hue-rotate(15deg) brightness(1.02)" },
-  { id: "film", name: "胶片", css: "contrast(1.1) saturate(0.9) brightness(1.02)" },
-  { id: "soft", name: "柔光", css: "brightness(1.08) contrast(0.92) saturate(1.05)" },
-];
-
-const FRAMES = [
-  { id: "cream", color: "#FFF8F0", name: "奶油" },
-  { id: "white", color: "#FFFFFF", name: "纯白" },
-  { id: "black", color: "#1A1A1A", name: "墨黑" },
-  { id: "blush", color: "#FADADD", name: "腮红" },
-  { id: "mint", color: "#D8F3DC", name: "薄荷绿" },
-  { id: "sky", color: "#D6EAF8", name: "天空" },
-];
-
-const SLOTS = ["10:00", "11:00", "14:00", "15:00", "16:00", "19:00", "20:00"];
-const BOOK_KEY = "yike_bookings_web";
+const BOOK_KEY = "yike_bookings_web_v2";
 
 const state = {
-  layoutId: "strip4",
-  filterId: "none",
-  frameColor: "#FFF8F0",
-  shots: [],
-  selected: [],
-  stream: null,
-  resultUrl: "",
-  bookTime: "14:00",
-  people: 2,
+  tab: "home",
+  screen: "home",
+  activityType: "婚礼活动",
+  duration: 2,
+  date: "",
+  city: "",
+  name: "",
+  phone: "",
+  note: "",
   remind: true,
-  inviteCode: "",
-  fromInvite: "",
   lastBooking: null,
 };
 
 const $ = (id) => document.getElementById(id);
 
-function show(screen) {
-  document.querySelectorAll(".screen").forEach((el) => el.classList.add("hidden"));
-  $(`screen-${screen}`).classList.remove("hidden");
-}
-
-function getLayout() {
-  return LAYOUTS.find((l) => l.id === state.layoutId) || LAYOUTS[0];
-}
-
-function getFilter() {
-  return FILTERS.find((f) => f.id === state.filterId) || FILTERS[0];
-}
-
-function renderLayouts() {
-  const grid = $("layout-grid");
-  grid.innerHTML = LAYOUTS.map(
-    (l) => `
-    <button type="button" class="layout-card ${state.layoutId === l.id ? "active" : ""}" data-id="${l.id}">
-      <div class="layout-preview ${l.id}">${"<i></i>".repeat(l.slots)}</div>
-      <strong>${l.name}</strong>
-      <span>${l.desc} · ${l.slots} 张</span>
-    </button>`
-  ).join("");
-  grid.querySelectorAll(".layout-card").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.layoutId = btn.dataset.id;
-      renderLayouts();
-    });
-  });
-}
-
-function renderFilters(containerId) {
-  const row = $(containerId);
-  row.innerHTML = FILTERS.map(
-    (f) =>
-      `<button type="button" class="chip ${state.filterId === f.id ? "active" : ""}" data-id="${f.id}">${f.name}</button>`
-  ).join("");
-  row.querySelectorAll(".chip").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.filterId = btn.dataset.id;
-      renderFilters("filter-row");
-      renderFilters("filter-row-2");
-      applyLiveFilter();
-      renderPreview();
-    });
-  });
-}
-
-function applyLiveFilter() {
-  const video = $("video");
-  video.style.filter = getFilter().css === "none" ? "" : getFilter().css;
-}
-
-async function startCamera() {
-  const hint = $("cam-hint");
-  try {
-    if (state.stream) {
-      state.stream.getTracks().forEach((t) => t.stop());
-    }
-    state.stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 960 } },
-      audio: false,
-    });
-    $("video").srcObject = state.stream;
-    hint.textContent = "";
-    applyLiveFilter();
-  } catch (err) {
-    hint.textContent = "无法打开摄像头，将使用演示占位图完成流程。";
-    console.warn(err);
-  }
-}
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
-async function runCountdown(sec) {
-  const el = $("countdown");
-  el.classList.remove("hidden");
-  for (let n = sec; n >= 1; n--) {
-    el.textContent = String(n);
-    await sleep(1000);
-  }
-  el.classList.add("hidden");
-}
-
-function makePlaceholder(label) {
-  const c = document.createElement("canvas");
-  c.width = 720;
-  c.height = 960;
-  const ctx = c.getContext("2d");
-  const g = ctx.createLinearGradient(0, 0, 720, 960);
-  g.addColorStop(0, "#d9cfc4");
-  g.addColorStop(1, "#8f8276");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 720, 960);
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-  ctx.beginPath();
-  ctx.arc(360, 380, 140, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "rgba(0,0,0,0.35)";
-  ctx.font = "600 36px sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText(label, 360, 620);
-  return c.toDataURL("image/jpeg", 0.9);
-}
-
-function takeShot(index) {
-  const video = $("video");
-  const canvas = $("capture-canvas");
-  if (state.stream && video.videoWidth) {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.translate(canvas.width, 0);
-    ctx.scale(-1, 1);
-    ctx.filter = getFilter().css === "none" ? "none" : getFilter().css;
-    ctx.drawImage(video, 0, 0);
-    ctx.restore();
-    return canvas.toDataURL("image/jpeg", 0.92);
-  }
-  return makePlaceholder(`DEMO ${index + 1}`);
-}
-
-function renderThumbs() {
-  const layout = getLayout();
-  const wrap = $("thumbs");
-  const parts = state.shots.map((src) => `<img src="${src}" alt="" />`);
-  while (parts.length < layout.slots) parts.push('<div class="empty"></div>');
-  wrap.innerHTML = parts.join("");
-}
-
-async function startBurst() {
-  const btn = $("btn-shutter");
-  btn.disabled = true;
-  const layout = getLayout();
-  state.shots = [];
-  renderThumbs();
-  for (let i = 0; i < layout.slots; i++) {
-    $("shot-step").textContent = `第 ${i + 1} / ${layout.slots} 张`;
-    $("shot-tip").textContent = `准备拍第 ${i + 1} 张`;
-    await runCountdown(3);
-    const flash = $("flash");
-    flash.classList.remove("hidden");
-    const shot = takeShot(i);
-    state.shots.push(shot);
-    renderThumbs();
-    await sleep(220);
-    flash.classList.add("hidden");
-    if (i < layout.slots - 1) await sleep(400);
-  }
-  state.selected = state.shots.slice();
-  btn.disabled = false;
-  $("shot-tip").textContent = "拍摄完成";
-  renderSelect();
-  show("select");
-}
-
-function renderSelect() {
-  const layout = getLayout();
-  const grid = $("shot-grid");
-  grid.innerHTML = state.shots
-    .map((src, i) => {
-      const order = state.selected.indexOf(src);
-      return `<div class="shot ${order >= 0 ? "on" : ""}" data-i="${i}">
-        <img src="${src}" alt="" />
-        ${order >= 0 ? `<div class="badge">${order + 1}</div>` : ""}
-      </div>`;
-    })
-    .join("");
-  $("select-sub").textContent = `已选 ${state.selected.length} / ${layout.slots}`;
-  $("btn-to-decorate").disabled = state.selected.length !== layout.slots;
-  grid.querySelectorAll(".shot").forEach((el) => {
-    el.addEventListener("click", () => {
-      const src = state.shots[Number(el.dataset.i)];
-      const idx = state.selected.indexOf(src);
-      if (idx >= 0) state.selected.splice(idx, 1);
-      else if (state.selected.length < layout.slots) state.selected.push(src);
-      renderSelect();
-    });
-  });
-}
-
-function renderColors() {
-  const wrap = $("colors");
-  wrap.innerHTML = FRAMES.map(
-    (f) =>
-      `<button type="button" class="color ${state.frameColor === f.color ? "active" : ""}" style="background:${f.color}" data-color="${f.color}" title="${f.name}"></button>`
-  ).join("");
-  wrap.querySelectorAll(".color").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.frameColor = btn.dataset.color;
-      renderColors();
-      renderPreview();
-    });
-  });
-}
-
-function renderPreview() {
-  const layout = getLayout();
-  const box = $("preview-box");
-  box.className = `preview-box ${layout.id}`;
-  box.style.background = state.frameColor;
-  const dark = state.frameColor === "#1A1A1A";
-  box.innerHTML =
-    state.selected.map((src) => `<img src="${src}" style="filter:${getFilter().css}" alt="" />`).join("") +
-    `<div class="preview-brand" style="color:${dark ? "rgba(255,255,255,.7)" : "rgba(0,0,0,.5)"}">一刻 · Photobooth</div>`;
-}
-
-function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
-}
-
-async function compose() {
-  const layout = getLayout();
-  const canvas = $("strip-canvas");
-  canvas.width = layout.canvas.w;
-  canvas.height = layout.canvas.h;
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = state.frameColor;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < layout.positions.length; i++) {
-    const pos = layout.positions[i];
-    const src = state.selected[i];
-    if (!src) continue;
-    const img = await loadImage(src);
-    const ir = img.width / img.height;
-    const pr = pos.w / pos.h;
-    let sx = 0;
-    let sy = 0;
-    let sw = img.width;
-    let sh = img.height;
-    if (ir > pr) {
-      sw = img.height * pr;
-      sx = (img.width - sw) / 2;
-    } else {
-      sh = img.width / pr;
-      sy = (img.height - sh) / 2;
-    }
-    ctx.save();
-    ctx.filter = getFilter().css === "none" ? "none" : getFilter().css;
-    ctx.drawImage(img, sx, sy, sw, sh, pos.x, pos.y, pos.w, pos.h);
-    ctx.restore();
-  }
-
-  const dark = state.frameColor === "#1A1A1A";
-  ctx.fillStyle = dark ? "rgba(255,255,255,0.72)" : "rgba(0,0,0,0.55)";
-  ctx.font = "600 28px sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("一刻 · Photobooth", canvas.width / 2, layout.footerY);
-  const now = new Date();
-  const stamp = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")}`;
-  ctx.font = "20px sans-serif";
-  ctx.fillText(stamp, canvas.width / 2, layout.footerY + 36);
-
-  state.resultUrl = canvas.toDataURL("image/jpeg", 0.92);
-  $("result-img").src = state.resultUrl;
-  $("btn-download").href = state.resultUrl;
-  show("result");
-}
-
-function resetAll() {
-  state.shots = [];
-  state.selected = [];
-  state.resultUrl = "";
-  state.layoutId = "strip4";
-  state.filterId = "none";
-  state.frameColor = "#FFF8F0";
-  showHome();
-}
-
-function getInviteCode() {
-  let code = localStorage.getItem("yike_invite_code");
-  if (!code) {
-    code = `YK${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-    localStorage.setItem("yike_invite_code", code);
-  }
-  state.inviteCode = code;
-  return code;
-}
-
-function readInviteFromUrl() {
-  const params = new URLSearchParams(location.search);
-  const code = params.get("code") || params.get("invite") || "";
-  if (code) {
-    state.fromInvite = code;
-    localStorage.setItem("yike_from_invite", code);
-    const map = JSON.parse(localStorage.getItem("yike_invite_opens") || "{}");
-    map[code] = (map[code] || 0) + 1;
-    localStorage.setItem("yike_invite_opens", JSON.stringify(map));
-  } else {
-    state.fromInvite = localStorage.getItem("yike_from_invite") || "";
-  }
-}
-
-function showHome() {
-  const banner = $("invite-banner");
-  if (state.fromInvite) {
-    banner.textContent = `好友邀请码 ${state.fromInvite} · 欢迎来拍`;
-    banner.classList.remove("hidden");
-  } else {
-    banner.classList.add("hidden");
-  }
-  show("home");
+function today() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function listBookings() {
   try {
     return JSON.parse(localStorage.getItem(BOOK_KEY) || "[]");
-  } catch (e) {
+  } catch {
     return [];
   }
 }
 
-function saveBooking(booking) {
+function saveBooking(b) {
   const list = listBookings();
-  list.unshift(booking);
+  list.unshift(b);
   localStorage.setItem(BOOK_KEY, JSON.stringify(list));
 }
 
-function todayInputValue() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function setTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll(".tab").forEach((el) => {
+    el.classList.toggle("active", el.dataset.tab === tab);
+  });
+  if (tab === "home") renderHome();
+  if (tab === "book") renderBook();
+  if (tab === "feed") renderFeed();
+  if (tab === "mine") renderMine();
 }
 
-function openBook() {
-  $("book-date").value = todayInputValue();
-  $("book-date").min = todayInputValue();
-  $("people-num").textContent = String(state.people);
-  const row = $("book-slots");
-  row.innerHTML = SLOTS.map(
-    (t) =>
-      `<button type="button" class="chip ${state.bookTime === t ? "active" : ""}" data-time="${t}">${t}</button>`
+function mount(html) {
+  $("screens").innerHTML = html;
+}
+
+function renderHome() {
+  state.screen = "home";
+  mount(`
+    <section>
+      <div class="hero">
+        <h1>让快乐，有迹可循</h1>
+        <div class="tags"><span>婚礼</span><span>生日</span><span>派对</span><span>活动</span><span>品牌活动</span></div>
+      </div>
+      <div class="card brand-card">
+        <div class="brand-row">
+          <div class="logo">一刻</div>
+          <div>
+            <div class="brand-name">一刻 · PHOTO BOOTH</div>
+            <div class="brand-area">服务城市 内江 | 泸州 | 自贡</div>
+          </div>
+        </div>
+        <div class="contact"><span>☎ 19900000000</span><span>微信 · 小红书 · 抖音</span></div>
+      </div>
+      <div class="quick">
+        <button data-go="about"><div class="qicon c1">介</div>品牌介绍</button>
+        <button data-go="book"><div class="qicon c2">约</div>活动预约</button>
+        <button data-go="shoot"><div class="qicon c3">拍</div>现场体验</button>
+        <button data-go="feed"><div class="qicon c4">评</div>店铺动态</button>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden" data-go="about">
+        <div class="content-cover cover-a">中高端定制 · 全案用心</div>
+        <div class="content-body"><strong>选择一刻 · PHOTO BOOTH 您将会得到</strong><span>查看详情 ></span></div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden" data-go="price">
+        <div class="content-cover cover-b">PHOTO BOOTH 租赁套餐</div>
+        <div class="content-body"><strong>价目服务表（必看）</strong><span>查看详情 ></span></div>
+      </div>
+    </section>
+  `);
+  bindNav();
+}
+
+function renderBook() {
+  state.screen = "book";
+  if (!state.date) state.date = "";
+  mount(`
+    <section>
+      <div class="brand-line">一刻 · PHOTO BOOTH</div>
+      <div class="head-title">告诉我们，你想记录哪一天</div>
+      <div class="head-sub">填写活动信息后生成需求单，方便确认档期、模板与现场安排。</div>
+      <div class="card">
+        <div class="label"><span class="req">*</span>活动类型</div>
+        <div class="chips" id="types"></div>
+      </div>
+      <div class="card">
+        <div class="label"><span class="req">*</span>意向时长</div>
+        <div class="durations" id="durs"></div>
+      </div>
+      <div class="card">
+        <div class="label"><span class="req">*</span>活动日期</div>
+        <input class="field" id="date" type="date" min="${today()}" value="${state.date}" />
+        <div class="label" style="margin-top:12px"><span class="req">*</span>活动城市</div>
+        <select class="field" id="city">
+          <option value="">请选择活动城市</option>
+          ${CITIES.map((c) => `<option ${state.city === c ? "selected" : ""}>${c}</option>`).join("")}
+        </select>
+      </div>
+      <div class="card">
+        <div class="label">联系人</div>
+        <input class="field" id="name" placeholder="怎么称呼你" value="${state.name}" />
+        <div class="label">手机号</div>
+        <input class="field" id="phone" placeholder="方便确认档期" value="${state.phone}" />
+        <div class="label">备注</div>
+        <input class="field" id="note" placeholder="人数 / 场地 / 模板" value="${state.note}" />
+      </div>
+      <div class="card remind" id="remind">
+        <div><strong>微信提醒</strong><div class="head-sub" style="margin:4px 0 0">演示：浏览器通知</div></div>
+        <div class="switch ${state.remind ? "on" : ""}" id="sw"><div class="knob"></div></div>
+      </div>
+      <button class="cta" id="submit">提交需求单</button>
+    </section>
+  `);
+  const types = document.getElementById("types");
+  types.innerHTML = TYPES.map(
+    (t) => `<button class="chip ${state.activityType === t ? "active" : ""}" data-t="${t}">${t}</button>`
   ).join("");
-  row.querySelectorAll(".chip").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.bookTime = btn.dataset.time;
-      openBook();
-    });
-  });
-  $("remind-switch").classList.toggle("on", state.remind);
-  show("book");
+  types.querySelectorAll(".chip").forEach((b) =>
+    b.addEventListener("click", () => {
+      state.activityType = b.dataset.t;
+      renderBook();
+    })
+  );
+  const durs = document.getElementById("durs");
+  durs.innerHTML = DURS.map(
+    (d) => `<button class="duration ${state.duration === d.h ? "active" : ""}" data-h="${d.h}"><strong>${d.h}小时</strong><span>${d.tip}</span></button>`
+  ).join("");
+  durs.querySelectorAll(".duration").forEach((b) =>
+    b.addEventListener("click", () => {
+      state.duration = Number(b.dataset.h);
+      renderBook();
+    })
+  );
+  document.getElementById("remind").onclick = () => {
+    state.remind = !state.remind;
+    renderBook();
+  };
+  document.getElementById("submit").onclick = submitBook;
 }
 
 async function submitBook() {
-  const name = $("book-name").value.trim();
-  const date = $("book-date").value;
-  const note = $("book-note").value.trim();
-  if (!name) {
-    alert("请填写昵称");
+  state.date = document.getElementById("date").value;
+  state.city = document.getElementById("city").value;
+  state.name = document.getElementById("name").value.trim();
+  state.phone = document.getElementById("phone").value.trim();
+  state.note = document.getElementById("note").value.trim();
+  if (!state.date || !state.city || !state.name) {
+    alert("请完整填写必填项");
     return;
   }
-  if (!date || !state.bookTime) {
-    alert("请选择档期");
-    return;
-  }
-
   let remindOk = false;
   if (state.remind && "Notification" in window) {
-    const perm = await Notification.requestPermission();
-    remindOk = perm === "granted";
+    remindOk = (await Notification.requestPermission()) === "granted";
     if (remindOk) {
-      // 演示：约 3 秒后弹一次提醒（真机小程序用订阅消息 + 云函数定时）
       setTimeout(() => {
-        new Notification("一刻 Photobooth 预约提醒", {
-          body: `${date} ${state.bookTime} 档期快到了，记得来拍哦`,
+        new Notification("一刻 PHOTO BOOTH 预约提醒", {
+          body: `${state.date} ${state.activityType} 档期快到了`,
         });
-      }, 3000);
+      }, 2500);
     }
   }
-
   const booking = {
     id: `b_${Date.now()}`,
-    name,
-    date,
-    time: state.bookTime,
-    people: state.people,
-    note,
-    remind: state.remind,
+    ...state,
+    packageLabel: `${state.duration}小时`,
     remindAccepted: remindOk,
-    inviteCode: state.fromInvite || "",
     createdAt: new Date().toISOString(),
   };
   saveBooking(booking);
   state.lastBooking = booking;
-  $("book-success-sub").textContent = `${date} ${state.bookTime} · ${state.people} 人`;
-  $("book-success-card").innerHTML = `
-    <div class="row"><span>昵称</span><strong>${name}</strong></div>
-    <div class="row"><span>提醒</span><strong>${
-      state.remind ? (remindOk ? "已授权（演示通知）" : "未授权/不支持") : "未开启"
-    }</strong></div>
-    <div class="row"><span>来源</span><strong>${booking.inviteCode || "自然访问"}</strong></div>
-  `;
-  show("book-success");
+  renderBookSuccess();
 }
 
-function renderBookList() {
+function renderBookSuccess() {
+  state.screen = "book-success";
+  const b = state.lastBooking;
+  mount(`
+    <section>
+      <div class="ok">✓</div>
+      <div class="head-title">需求单已提交</div>
+      <div class="head-sub">我们会尽快确认档期</div>
+      <div class="card">
+        <div class="row"><span>活动类型</span><strong>${b.activityType}</strong></div>
+        <div class="row"><span>意向时长</span><strong>${b.packageLabel}</strong></div>
+        <div class="row"><span>活动日期</span><strong>${b.date}</strong></div>
+        <div class="row"><span>活动城市</span><strong>${b.city}</strong></div>
+        <div class="row"><span>联系人</span><strong>${b.name}</strong></div>
+        <div class="row"><span>提醒</span><strong>${b.remind ? (b.remindAccepted ? "已授权" : "未授权") : "未开启"}</strong></div>
+      </div>
+      <button class="cta" data-go="orders">查看我的订单</button>
+      <button class="cta ghost" data-go="home">回首页</button>
+    </section>
+  `);
+  bindNav();
+}
+
+function renderFeed() {
+  state.screen = "feed";
+  mount(`
+    <section>
+      <div class="card">
+        <div class="post-head"><div class="avatar">一刻</div><div><strong>一刻 · PHOTO BOOTH</strong><div class="head-sub" style="margin:0">2026-10-14 12:58</div></div></div>
+        <div class="post-text">一刻日记分享 · 婚礼现场即拍即印。</div>
+        <div class="grid g2"><div class="cell"></div><div class="cell"></div></div>
+      </div>
+      <div class="card">
+        <div class="post-head"><div class="avatar">一刻</div><div><strong>一刻 · PHOTO BOOTH</strong><div class="head-sub" style="margin:0">2026-10-08 18:20</div></div></div>
+        <div class="post-text">生日宴布置花絮：道具、模板、留言簿。</div>
+        <div class="grid g9">${"<div class='cell'></div>".repeat(9)}</div>
+      </div>
+    </section>
+  `);
+}
+
+function renderMine() {
+  state.screen = "mine";
+  mount(`
+    <section>
+      <div class="card profile">
+        <div class="avatar" style="width:54px;height:54px;font-size:22px">☺</div>
+        <div><strong style="font-size:18px">微信用户</strong><div class="role">顾客</div></div>
+      </div>
+      <div class="card menu">
+        <button data-go="orders"><span>我的订单</span><span>›</span></button>
+        <button data-go="price"><span>价目服务表</span><span>›</span></button>
+        <button data-go="about"><span>品牌介绍</span><span>›</span></button>
+      </div>
+    </section>
+  `);
+  bindNav();
+}
+
+function renderOrders() {
+  state.screen = "orders";
   const list = listBookings();
-  const wrap = $("book-list");
-  if (!list.length) {
-    wrap.innerHTML = `<p class="sub">还没有预约</p>`;
-  } else {
-    wrap.innerHTML = list
-      .map(
-        (b) => `<div class="book-item">
-        <div class="book-item-top"><strong>${b.date} ${b.time}</strong><span>${
-          b.remind && b.remindAccepted ? "已提醒" : b.remind ? "待提醒" : "无提醒"
-        }</span></div>
-        <div class="sub">${b.name} · ${b.people} 人</div>
-      </div>`
-      )
-      .join("");
-  }
-  show("book-list");
+  mount(`
+    <section>
+      <div class="head-title">我的订单</div>
+      ${
+        list.length
+          ? list
+              .map(
+                (b) => `<div class="card order-item">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong>${b.date}</strong><span class="tag">${b.remind && b.remindAccepted ? "已提醒" : "需求单"}</span>
+            </div>
+            <div class="head-sub">${b.activityType} · ${b.packageLabel} · ${b.city}<br/>${b.name}</div>
+          </div>`
+              )
+              .join("")
+          : `<div class="head-sub">还没有需求单</div>`
+      }
+      <button class="cta" data-go="book">去预约</button>
+    </section>
+  `);
+  bindNav();
 }
 
-function openPromo() {
-  const code = getInviteCode();
-  $("promo-code").textContent = code;
-  show("promo");
+function renderPrice() {
+  state.screen = "price";
+  mount(`
+    <section>
+      <div class="card" style="text-align:center">
+        <div class="logo" style="margin:0 auto 8px">一刻</div>
+        <strong style="font-size:22px">一刻</strong>
+        <div class="brand-area">photo booth</div>
+      </div>
+      <div class="card">
+        <strong>PHOTO BOOTH 租赁套餐</strong>
+        <div class="early" style="margin-top:10px">提前1个月预约可享早鸟价，直减 ¥200</div>
+        <div class="pkg"><span>1 小时</span><div><span class="now">¥1080</span><span class="old">¥1280</span></div><span>早鸟价</span></div>
+        <div class="pkg"><span>2 小时</span><div><span class="now">¥1680</span><span class="old">¥1880</span></div><span>早鸟价</span></div>
+        <div class="pkg"><span>3 小时</span><div><span class="now">¥2180</span><span class="old">¥2380</span></div><span>早鸟价</span></div>
+        <div class="pkg"><span>活动主题定制</span><div>价格面议</div><span></span></div>
+      </div>
+      <button class="cta" data-go="book">去预约档期</button>
+      <button class="cta ghost" data-go="home">回首页</button>
+    </section>
+  `);
+  bindNav();
 }
 
-function promoLink() {
-  const code = getInviteCode();
-  const url = new URL(location.href);
-  url.searchParams.set("code", code);
-  url.searchParams.set("from", "share");
-  url.hash = "";
-  return url.toString();
+function renderAbout() {
+  state.screen = "about";
+  mount(`
+    <section>
+      <div class="hero"><h1>选择一刻 · PHOTO BOOTH<br/>您将会得到</h1></div>
+      <div class="card">
+        <div class="tag" style="display:inline-block;background:rgba(168,139,214,.14);color:#7a5fb0;border-radius:999px;padding:2px 8px;font-size:11px">中高端定制</div>
+        <div class="head-title" style="font-size:16px;margin-top:8px">让快乐，有迹可循</div>
+        <div class="head-sub">不做流水线敷衍，全案用心定制。热升华即拍即印。</div>
+      </div>
+      <button class="cta" data-go="book">去活动预约</button>
+      <button class="cta ghost" data-go="price">查看价目表</button>
+    </section>
+  `);
+  bindNav();
 }
 
-function bind() {
-  $("btn-start").addEventListener("click", () => {
-    renderLayouts();
-    renderFilters("filter-row");
-    show("layout");
-  });
-  $("btn-to-shoot").addEventListener("click", async () => {
-    $("shot-step").textContent = `第 1 / ${getLayout().slots} 张`;
-    show("shoot");
-    await startCamera();
-    renderThumbs();
-  });
-  $("btn-shutter").addEventListener("click", startBurst);
-  $("btn-to-decorate").addEventListener("click", () => {
-    renderFilters("filter-row-2");
-    renderColors();
-    renderPreview();
-    show("decorate");
-  });
-  $("btn-reshoot").addEventListener("click", async () => {
-    state.shots = [];
-    state.selected = [];
-    show("shoot");
-    await startCamera();
-    renderThumbs();
-  });
-  $("btn-compose").addEventListener("click", compose);
-  $("btn-again").addEventListener("click", resetAll);
-
-  $("btn-book-home").addEventListener("click", openBook);
-  $("btn-promo-home").addEventListener("click", openPromo);
-  $("btn-my-bookings").addEventListener("click", renderBookList);
-  $("btn-book-back").addEventListener("click", showHome);
-  $("btn-book-submit").addEventListener("click", submitBook);
-  $("btn-book-home2").addEventListener("click", showHome);
-  $("btn-book-list2").addEventListener("click", renderBookList);
-  $("btn-book-again").addEventListener("click", openBook);
-  $("btn-list-home").addEventListener("click", showHome);
-  $("btn-promo-book").addEventListener("click", openBook);
-  $("btn-promo-back").addEventListener("click", showHome);
-  $("btn-result-promo").addEventListener("click", openPromo);
-
-  $("people-inc").addEventListener("click", () => {
-    state.people = Math.min(12, state.people + 1);
-    $("people-num").textContent = String(state.people);
-  });
-  $("people-dec").addEventListener("click", () => {
-    state.people = Math.max(1, state.people - 1);
-    $("people-num").textContent = String(state.people);
-  });
-  $("remind-toggle").addEventListener("click", () => {
-    state.remind = !state.remind;
-    $("remind-switch").classList.toggle("on", state.remind);
-  });
-
-  $("btn-copy-code").addEventListener("click", async () => {
-    await navigator.clipboard.writeText(getInviteCode());
-    alert("已复制邀请码");
-  });
-  $("btn-copy-link").addEventListener("click", async () => {
-    await navigator.clipboard.writeText(promoLink());
-    alert("已复制推广链接");
-  });
-  $("btn-share-booking").addEventListener("click", async () => {
-    const b = state.lastBooking;
-    const text = b
-      ? `我预约了 ${b.date} ${b.time} 的一刻拍摄，一起？ ${promoLink()}`
-      : promoLink();
-    await navigator.clipboard.writeText(text);
-    alert("分享文案已复制");
+function bindNav() {
+  document.querySelectorAll("[data-go]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const go = el.getAttribute("data-go");
+      if (go === "home") setTab("home");
+      else if (go === "book") setTab("book");
+      else if (go === "feed") setTab("feed");
+      else if (go === "orders") renderOrders();
+      else if (go === "price") renderPrice();
+      else if (go === "about") renderAbout();
+      else if (go === "shoot") alert("现场体验请在微信小程序中打开相机连拍流程");
+    });
   });
 }
 
-readInviteFromUrl();
-getInviteCode();
-bind();
-showHome();
+document.querySelectorAll(".tab").forEach((btn) => {
+  btn.addEventListener("click", () => setTab(btn.dataset.tab));
+});
+
+setTab("home");

@@ -1,0 +1,49 @@
+.about-page {
+  height: 100vh;
+}
+
+.banner {
+  margin-bottom: 20rpx;
+  padding: 48rpx 32rpx;
+  border-radius: 28rpx;
+  background:
+    radial-gradient(circle at 80% 30%, rgba(243, 182, 200, 0.5), transparent 45%),
+    linear-gradient(135deg, #f6e2d8, #efe4f4);
+}
+
+.banner-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(168, 139, 214, 0.14);
+  color: #7a5fb0;
+  font-size: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.h {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 16rpx;
+}
+
+.p,
+.li {
+  display: block;
+  font-size: 26rpx;
+  color: #5d5854;
+  line-height: 1.7;
+  margin-bottom: 10rpx;
+}
+
+.bottom {
+  height: 48rpx;
+}

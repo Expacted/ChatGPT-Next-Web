@@ -1,37 +1,31 @@
 .success-page {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
 }
 
 .ok-mark {
   width: 96rpx;
   height: 96rpx;
   border-radius: 50%;
-  background: rgba(62, 207, 142, 0.18);
-  color: var(--ok);
+  background: rgba(168, 139, 214, 0.16);
+  color: var(--accent);
   font-size: 48rpx;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20rpx;
-  animation: pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  margin-top: 12rpx;
 }
 
-.card {
-  margin: 40rpx 0 20rpx;
-  padding: 28rpx 32rpx;
-  border-radius: 24rpx;
-  background: var(--bg-soft);
-  border: 2rpx solid var(--line);
+.detail {
+  margin: 32rpx 0 12rpx;
 }
 
 .row {
   display: flex;
   justify-content: space-between;
   gap: 24rpx;
-  padding: 16rpx 0;
+  padding: 18rpx 0;
   font-size: 26rpx;
 }
 
@@ -47,15 +41,4 @@
 .v {
   text-align: right;
   word-break: break-all;
-}
-
-@keyframes pop {
-  from {
-    transform: scale(0.7);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }

@@ -1,13 +1,31 @@
-/**
- * 上线前在微信公众平台配置后填入：
- * 1. 开通云开发，复制环境 ID
- * 2. 订阅消息 → 选用「预约提醒」类模板，复制模板 ID
- */
 module.exports = {
-  cloudEnvId: "", // 例如 "yike-xxxxx"
-  // 订阅消息模板字段建议：thing1 活动名称 / time2 预约时间 / thing3 温馨提示
+  cloudEnvId: "",
   bookingRemindTmplId: "",
-  bookingLeadMinutes: 60, // 开拍前多少分钟提醒
-  brand: "一刻 Photobooth",
-  defaultSlots: ["10:00", "11:00", "14:00", "15:00", "16:00", "19:00", "20:00"],
+  bookingLeadMinutes: 60,
+  brand: "一刻 · PHOTO BOOTH",
+  slogan: "让快乐，有迹可循",
+  cities: ["内江", "泸州", "自贡", "成都", "其他"],
+  phone: "19900000000",
+  serviceAreas: "内江 | 泸州 | 自贡",
+  activityTypes: [
+    "商场活动",
+    "生日宴",
+    "婚礼活动",
+    "订婚宴",
+    "升学宴",
+    "毕业季",
+    "其他",
+  ],
+  durations: [
+    { hours: 2, label: "2小时", tip: "人气推荐", price: 1880, early: 1680 },
+    { hours: 3, label: "3小时", tip: "标准场次", price: 2380, early: 2180 },
+    { hours: 4, label: "4小时", tip: "大型活动推荐", price: 2880, early: 2680 },
+  ],
+  packages: [
+    { hours: 1, price: 1280, early: 1080 },
+    { hours: 2, price: 1880, early: 1680 },
+    { hours: 3, price: 2380, early: 2180 },
+  ],
+  earlyBirdNote: "提前1个月预约可享早鸟价，直减 ¥200",
+  deposit: 500,
 };

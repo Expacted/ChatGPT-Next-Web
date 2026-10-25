@@ -25,22 +25,22 @@ function addLocal(booking) {
   return booking;
 }
 
-function parseSlot(dateStr, timeStr) {
-  // dateStr: YYYY-MM-DD, timeStr: HH:mm
-  const [y, m, d] = dateStr.split("-").map(Number);
-  const [hh, mm] = timeStr.split(":").map(Number);
-  return new Date(y, m - 1, d, hh, mm, 0, 0);
-}
-
-function remindAtFrom(dateStr, timeStr) {
-  const start = parseSlot(dateStr, timeStr);
+function parseRemindAt(dateStr, timeStr) {
+  const [y, m, d] = (dateStr || "").split("-").map(Number);
+  if (!y || !m || !d) return new Date();
+  // 活动预约按「当天上午 10:00」提醒；若 time 是 HH:mm 则用具体时段
+  let hh = 10;
+  let mm = 0;
+  if (timeStr && /^\d{1,2}:\d{2}$/.test(timeStr)) {
+    const parts = timeStr.split(":").map(Number);
+    hh = parts[0];
+    mm = parts[1];
+  }
+  const start = new Date(y, m - 1, d, hh, mm, 0, 0);
   const lead = (config.bookingLeadMinutes || 60) * 60 * 1000;
   return new Date(start.getTime() - lead);
 }
 
-/**
- * 请求订阅消息授权（用户点一次同意，才能发提醒）
- */
 function requestRemindAuth() {
   const tmplId = config.bookingRemindTmplId;
   if (!tmplId) {
@@ -49,31 +49,29 @@ function requestRemindAuth() {
   return new Promise((resolve) => {
     wx.requestSubscribeMessage({
       tmplIds: [tmplId],
-      success: (res) => {
-        const accepted = res[tmplId] === "accept";
-        resolve({ accepted, raw: res });
-      },
+      success: (res) => resolve({ accepted: res[tmplId] === "accept", raw: res }),
       fail: (err) => resolve({ accepted: false, reason: "fail", err }),
     });
   });
 }
 
-/**
- * 创建预约：优先云函数，失败则本地存储（先跑通）
- */
 async function createBooking(payload) {
   const booking = {
     id: uid(),
     name: payload.name || "",
     phone: payload.phone || "",
     date: payload.date,
-    time: payload.time,
+    time: payload.time || "",
     people: payload.people || 1,
     note: payload.note || "",
+    activityType: payload.activityType || "",
+    duration: payload.duration || 0,
+    city: payload.city || "",
+    packageLabel: payload.packageLabel || "",
     inviteCode: payload.inviteCode || "",
     remind: !!payload.remind,
     remindAccepted: !!payload.remindAccepted,
-    remindAt: remindAtFrom(payload.date, payload.time).toISOString(),
+    remindAt: parseRemindAt(payload.date, payload.time).toISOString(),
     status: "confirmed",
     createdAt: new Date().toISOString(),
   };
@@ -100,7 +98,6 @@ module.exports = {
   listLocal,
   createBooking,
   requestRemindAuth,
-  parseSlot,
-  remindAtFrom,
+  parseRemindAt,
   config,
 };

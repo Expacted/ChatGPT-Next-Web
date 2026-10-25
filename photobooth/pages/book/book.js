@@ -1,41 +1,52 @@
+const config = require("../../utils/config");
 const {
   createBooking,
   requestRemindAuth,
-  config,
 } = require("../../utils/booking");
 const { getFromInvite, buildShare } = require("../../utils/share");
 
 function todayStr() {
   const d = new Date();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${m}-${day}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 Page({
   data: {
-    name: "",
-    phone: "",
+    activityTypes: config.activityTypes,
+    durations: config.durations,
+    cities: config.cities,
+    activityType: "婚礼活动",
+    duration: 2,
     date: "",
     minDate: "",
-    time: "",
-    people: 2,
+    city: "",
+    cityIndex: 0,
+    name: "",
+    phone: "",
     note: "",
     remind: true,
-    slots: config.defaultSlots,
     leadMinutes: config.bookingLeadMinutes || 60,
     submitting: false,
   },
 
   onLoad() {
     const date = todayStr();
-    this.setData({
-      date,
-      minDate: date,
-      time: config.defaultSlots[2] || "14:00",
-    });
+    this.setData({ minDate: date });
   },
 
+  onType(e) {
+    this.setData({ activityType: e.currentTarget.dataset.type });
+  },
+  onDuration(e) {
+    this.setData({ duration: Number(e.currentTarget.dataset.hours) });
+  },
+  onDate(e) {
+    this.setData({ date: e.detail.value });
+  },
+  onCity(e) {
+    const cityIndex = Number(e.detail.value);
+    this.setData({ cityIndex, city: config.cities[cityIndex] });
+  },
   onName(e) {
     this.setData({ name: e.detail.value.trim() });
   },
@@ -45,31 +56,31 @@ Page({
   onNote(e) {
     this.setData({ note: e.detail.value.trim() });
   },
-  onDate(e) {
-    this.setData({ date: e.detail.value });
-  },
-  onTime(e) {
-    this.setData({ time: e.currentTarget.dataset.time });
-  },
-  incPeople() {
-    this.setData({ people: Math.min(12, this.data.people + 1) });
-  },
-  decPeople() {
-    this.setData({ people: Math.max(1, this.data.people - 1) });
-  },
   toggleRemind() {
     this.setData({ remind: !this.data.remind });
   },
 
   async onSubmit() {
     if (this.data.submitting) return;
-    const { name, date, time, phone, people, note, remind } = this.data;
-    if (!name) {
-      wx.showToast({ title: "请填写昵称", icon: "none" });
+    const { activityType, duration, date, city, name, phone, note, remind } = this.data;
+    if (!activityType) {
+      wx.showToast({ title: "请选择活动类型", icon: "none" });
       return;
     }
-    if (!date || !time) {
-      wx.showToast({ title: "请选择档期", icon: "none" });
+    if (!duration) {
+      wx.showToast({ title: "请选择意向时长", icon: "none" });
+      return;
+    }
+    if (!date) {
+      wx.showToast({ title: "请选择活动日期", icon: "none" });
+      return;
+    }
+    if (!city) {
+      wx.showToast({ title: "请选择活动城市", icon: "none" });
+      return;
+    }
+    if (!name) {
+      wx.showToast({ title: "请填写联系人", icon: "none" });
       return;
     }
 
@@ -78,38 +89,40 @@ Page({
     if (remind) {
       const auth = await requestRemindAuth();
       remindAccepted = !!auth.accepted;
-      if (auth.reason === "no_tmpl") {
-        // 未配置模板 ID：先跑通，本地标记为「待开通」
-        remindAccepted = false;
-      } else if (!remindAccepted) {
-        wx.showToast({ title: "未开通提醒，仍可预约", icon: "none" });
+      if (!remindAccepted && auth.reason !== "no_tmpl") {
+        wx.showToast({ title: "未开通提醒，仍可提交", icon: "none" });
       }
     }
 
     try {
+      const pack = config.durations.find((d) => d.hours === duration) || {};
       const res = await createBooking({
         name,
         phone,
         date,
-        time,
-        people,
+        time: `${duration}小时`,
+        people: 1,
         note,
+        activityType,
+        duration,
+        city,
+        packageLabel: pack.label || `${duration}小时`,
         remind,
         remindAccepted,
         inviteCode: getFromInvite() || getApp().globalData.inviteCode || "",
       });
-      const id = res.booking.id;
-      wx.redirectTo({
-        url: `/pages/book/success?id=${id}&via=${res.via}&remind=${remind ? 1 : 0}&ok=${remindAccepted ? 1 : 0}`,
+      wx.navigateTo({
+        url: `/pages/book/success?id=${res.booking.id}&via=${res.via}&remind=${remind ? 1 : 0}&ok=${remindAccepted ? 1 : 0}`,
       });
+      this.setData({ submitting: false });
     } catch (e) {
       console.error(e);
-      wx.showToast({ title: "预约失败，请重试", icon: "none" });
+      wx.showToast({ title: "提交失败，请重试", icon: "none" });
       this.setData({ submitting: false });
     }
   },
 
   onShareAppMessage() {
-    return buildShare({ title: "一刻 Photobooth · 预约一起拍" });
+    return buildShare({ title: "一刻 PHOTO BOOTH · 预约活动档期" });
   },
 });

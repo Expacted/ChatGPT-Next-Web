@@ -4,15 +4,12 @@
 }
 
 .code-card {
-  margin: 40rpx 0 28rpx;
+  margin: 28rpx 0;
   padding: 40rpx 32rpx;
   border-radius: 28rpx;
-  background:
-    linear-gradient(145deg, rgba(232, 93, 76, 0.28), rgba(255, 143, 122, 0.08)),
-    var(--bg-soft);
-  border: 2rpx solid rgba(232, 93, 76, 0.3);
+  background: linear-gradient(145deg, rgba(168, 139, 214, 0.18), rgba(243, 182, 200, 0.2));
+  border: 2rpx solid rgba(168, 139, 214, 0.25);
   text-align: center;
-  animation: rise 0.5s ease both;
 }
 
 .code-label {
@@ -28,6 +25,7 @@
   font-size: 64rpx;
   font-weight: 700;
   letter-spacing: 0.18em;
+  color: #7a5fb0;
 }
 
 .copy {
@@ -38,6 +36,7 @@
   border: 2rpx solid var(--line);
   font-size: 22rpx;
   color: var(--muted);
+  background: #fff;
 }
 
 .steps {
@@ -59,8 +58,8 @@
   width: 40rpx;
   height: 40rpx;
   border-radius: 50%;
-  background: rgba(232, 93, 76, 0.2);
-  color: var(--accent-soft);
+  background: rgba(168, 139, 214, 0.18);
+  color: #7a5fb0;
   font-size: 22rpx;
   font-weight: 700;
   display: flex;
@@ -74,15 +73,4 @@
   text-align: center;
   font-size: 22rpx;
   color: var(--muted);
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(16rpx);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }

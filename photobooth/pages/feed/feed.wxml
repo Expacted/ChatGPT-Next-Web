@@ -1,0 +1,21 @@
+<scroll-view scroll-y class="page feed-page" enhanced show-scrollbar="{{false}}">
+  <view class="card post" wx:for="{{posts}}" wx:key="id">
+    <view class="post-head">
+      <view class="avatar">一刻</view>
+      <view>
+        <text class="name">一刻 · PHOTO BOOTH</text>
+        <text class="time">{{item.time}}</text>
+      </view>
+    </view>
+    <text class="text">{{item.text}}</text>
+    <view class="grid grid-{{item.images.length}}">
+      <view
+        wx:for="{{item.images}}"
+        wx:for-item="img"
+        wx:key="*this"
+        class="cell tone-{{img}}"
+      ></view>
+    </view>
+  </view>
+  <view class="end">已经到底啦</view>
+</scroll-view>

@@ -1,15 +1,16 @@
 <view class="page">
-  <view class="headline" style="margin-top:0;font-size:34rpx;">我的预约</view>
-  <view class="sub" wx:if="{{!list.length}}">还没有预约，去定一个档期吧</view>
+  <view class="section-title">我的订单</view>
+  <view class="section-sub" wx:if="{{!list.length}}">还没有需求单，去预约一个活动吧</view>
 
   <view class="list" wx:if="{{list.length}}">
-    <view class="item" wx:for="{{list}}" wx:key="id">
+    <view class="card item" wx:for="{{list}}" wx:key="id">
       <view class="item-top">
-        <text class="when">{{item.date}} {{item.time}}</text>
-        <text class="tag">{{item.remind && item.remindAccepted ? '已提醒' : (item.remind ? '待提醒' : '无提醒')}}</text>
+        <text class="when">{{item.date}}</text>
+        <text class="tag">{{item.remind && item.remindAccepted ? '已提醒' : (item.remind ? '待提醒' : '需求单')}}</text>
       </view>
-      <view class="item-meta">{{item.name}} · {{item.people}} 人</view>
-      <view class="item-note" wx:if="{{item.note}}">{{item.note}}</view>
+      <view class="meta">{{item.activityType || '活动'}} · {{item.packageLabel || item.time}} · {{item.city || ''}}</view>
+      <view class="meta">{{item.name}}{{item.phone ? ' · ' + item.phone : ''}}</view>
+      <view class="note" wx:if="{{item.note}}">{{item.note}}</view>
     </view>
   </view>
 

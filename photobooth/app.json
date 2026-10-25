@@ -1,26 +1,63 @@
 {
   "pages": [
+    "pages/home/home",
+    "pages/book/book",
+    "pages/feed/feed",
+    "pages/mine/mine",
+    "pages/price/price",
+    "pages/about/about",
+    "pages/book/success",
+    "pages/book/list",
+    "pages/promo/promo",
     "pages/index/index",
     "pages/layout/layout",
     "pages/shoot/shoot",
     "pages/select/select",
     "pages/decorate/decorate",
-    "pages/result/result",
-    "pages/book/book",
-    "pages/book/success",
-    "pages/book/list",
-    "pages/promo/promo"
+    "pages/result/result"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#121214",
-    "navigationBarTitleText": "一刻 Photobooth",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#121214",
-    "backgroundTextStyle": "light"
+    "navigationBarBackgroundColor": "#F7F1EA",
+    "navigationBarTitleText": "一刻 · PHOTO BOOTH",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F1EA",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#9A9A9A",
+    "selectedColor": "#A88BD6",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "assets/tab/home-normal.png",
+        "selectedIconPath": "assets/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/book/book",
+        "text": "预约",
+        "iconPath": "assets/tab/book-normal.png",
+        "selectedIconPath": "assets/tab/book-active.png"
+      },
+      {
+        "pagePath": "pages/feed/feed",
+        "text": "动态",
+        "iconPath": "assets/tab/feed-normal.png",
+        "selectedIconPath": "assets/tab/feed-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tab/mine-normal.png",
+        "selectedIconPath": "assets/tab/mine-active.png"
+      }
+    ]
   },
   "permission": {
     "scope.camera": {
-      "desc": "用于拍摄大头贴照片"
+      "desc": "用于现场体验拍摄大头贴"
     },
     "scope.writePhotosAlbum": {
       "desc": "用于将大头贴保存到相册"
