@@ -1,0 +1,106 @@
+.price-page {
+  height: 100vh;
+}
+
+.hero-brand {
+  text-align: center;
+  margin-bottom: 20rpx;
+  padding: 40rpx 28rpx;
+  background: linear-gradient(180deg, #fff7f2, #ffffff);
+}
+
+.logo {
+  width: 100rpx;
+  height: 100rpx;
+  margin: 0 auto 16rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(145deg, #f3b6c8, #a88bd6);
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.en {
+  display: block;
+  margin-top: 6rpx;
+  color: var(--muted);
+  letter-spacing: 0.16em;
+  font-size: 22rpx;
+}
+
+.block-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 20rpx;
+}
+
+.early {
+  margin-bottom: 20rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 16rpx;
+  background: rgba(224, 179, 92, 0.16);
+  color: #9a6f1f;
+  font-size: 22rpx;
+}
+
+.pkg {
+  display: grid;
+  grid-template-columns: 1.2fr 1.4fr auto;
+  align-items: center;
+  gap: 12rpx;
+  padding: 22rpx 0;
+  border-top: 2rpx solid var(--line);
+}
+
+.pkg.custom {
+  grid-template-columns: 1fr auto;
+}
+
+.pkg-h {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.pkg-price {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.now {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #7a5fb0;
+}
+
+.old {
+  font-size: 22rpx;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.pkg-tag {
+  font-size: 20rpx;
+  color: var(--accent);
+}
+
+.p {
+  display: block;
+  margin-bottom: 14rpx;
+  font-size: 24rpx;
+  color: #5d5854;
+  line-height: 1.65;
+}
+
+.bottom {
+  height: 48rpx;
+}

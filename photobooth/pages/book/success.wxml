@@ -1,0 +1,20 @@
+<view class="page success-page">
+  <view class="ok-mark">✓</view>
+  <view class="section-title" style="margin-top:24rpx;">需求单已提交</view>
+  <view class="section-sub">我们会尽快确认档期，也可开启微信提醒</view>
+
+  <view class="card detail">
+    <view class="row"><text class="k">活动类型</text><text class="v">{{booking.activityType}}</text></view>
+    <view class="row"><text class="k">意向时长</text><text class="v">{{booking.packageLabel || booking.time}}</text></view>
+    <view class="row"><text class="k">活动日期</text><text class="v">{{booking.date}}</text></view>
+    <view class="row"><text class="k">活动城市</text><text class="v">{{booking.city}}</text></view>
+    <view class="row"><text class="k">联系人</text><text class="v">{{booking.name}}</text></view>
+    <view class="row" wx:if="{{booking.phone}}"><text class="k">手机</text><text class="v">{{booking.phone}}</text></view>
+    <view class="row" wx:if="{{booking.note}}"><text class="k">备注</text><text class="v">{{booking.note}}</text></view>
+    <view class="row"><text class="k">提醒</text><text class="v">{{remindText}}</text></view>
+  </view>
+
+  <button class="cta" open-type="share">分享给策划 / 好友</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onOrders">查看我的订单</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onHome">回首页</button>
+</view>

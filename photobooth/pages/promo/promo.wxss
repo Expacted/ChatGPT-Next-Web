@@ -1,0 +1,76 @@
+.promo-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.code-card {
+  margin: 28rpx 0;
+  padding: 40rpx 32rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(145deg, rgba(168, 139, 214, 0.18), rgba(243, 182, 200, 0.2));
+  border: 2rpx solid rgba(168, 139, 214, 0.25);
+  text-align: center;
+}
+
+.code-label {
+  display: block;
+  font-size: 22rpx;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+}
+
+.code {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 64rpx;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #7a5fb0;
+}
+
+.copy {
+  display: inline-block;
+  margin-top: 24rpx;
+  padding: 10rpx 28rpx;
+  border-radius: 999rpx;
+  border: 2rpx solid var(--line);
+  font-size: 22rpx;
+  color: var(--muted);
+  background: #fff;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+  margin-bottom: 12rpx;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  font-size: 26rpx;
+  color: var(--muted);
+}
+
+.n {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(168, 139, 214, 0.18);
+  color: #7a5fb0;
+  font-size: 22rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat {
+  margin-top: 28rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--muted);
+}

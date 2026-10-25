@@ -1,0 +1,13 @@
+<view class="page result-page">
+  <view class="headline" style="margin-top:0;font-size:36rpx;">你的一刻已就绪</view>
+  <view class="sub">长按可预览，点下方保存或分享</view>
+
+  <view class="result-wrap">
+    <image class="result-img" src="{{resultPath}}" mode="widthFix" show-menu-by-longpress />
+  </view>
+
+  <button class="cta" bindtap="onSave" loading="{{saving}}">保存到相册</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" open-type="share">分享给好友</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onPromo">去推广</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onAgain">再拍一套</button>
+</view>

@@ -1,0 +1,144 @@
+.book-page {
+  height: 100vh;
+  padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+}
+
+.head {
+  margin-bottom: 8rpx;
+  padding: 8rpx 4rpx 20rpx;
+}
+
+.brand-line {
+  display: block;
+  font-size: 22rpx;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 12rpx;
+}
+
+.block {
+  margin-bottom: 20rpx;
+}
+
+.label {
+  font-size: 26rpx;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.duration-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+.duration {
+  padding: 28rpx 12rpx;
+  border-radius: 20rpx;
+  background: #f6f1ea;
+  text-align: center;
+  border: 2rpx solid transparent;
+}
+
+.duration.active {
+  background: rgba(168, 139, 214, 0.12);
+  border-color: var(--accent);
+}
+
+.d-label {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.d-tip {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 20rpx;
+  color: var(--muted);
+}
+
+.field-card .label {
+  margin-bottom: 8rpx;
+}
+
+.picker-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 64rpx;
+  font-size: 28rpx;
+}
+
+.placeholder {
+  color: #b0aaa3;
+}
+
+.arrow {
+  color: #c0b8b0;
+  font-size: 36rpx;
+}
+
+.input {
+  height: 80rpx;
+  padding: 0 8rpx;
+  font-size: 28rpx;
+  border-bottom: 2rpx solid var(--line);
+}
+
+.remind-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 8rpx;
+}
+
+.remind-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.remind-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--muted);
+}
+
+.switch {
+  width: 88rpx;
+  height: 52rpx;
+  border-radius: 999rpx;
+  background: #e8e2da;
+  padding: 4rpx;
+  flex-shrink: 0;
+}
+
+.switch.on {
+  background: var(--accent);
+}
+
+.knob {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.switch.on .knob {
+  transform: translateX(36rpx);
+}
+
+.foot-hint {
+  margin-top: 16rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--muted);
+}
+
+.home-bottom {
+  height: 40rpx;
+}

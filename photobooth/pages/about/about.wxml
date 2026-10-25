@@ -1,0 +1,20 @@
+<scroll-view scroll-y class="page about-page" enhanced show-scrollbar="{{false}}">
+  <view class="banner">
+    <text class="banner-title">{{about.title}}</text>
+  </view>
+
+  <view class="card">
+    <text class="tag">{{about.tag}}</text>
+    <text class="h">{{about.headline}}</text>
+    <text class="p" wx:for="{{about.paragraphs}}" wx:key="*this">{{item}}</text>
+  </view>
+
+  <view class="card">
+    <text class="h">你将获得</text>
+    <view class="li" wx:for="{{about.benefits}}" wx:key="*this">· {{item}}</view>
+  </view>
+
+  <button class="cta" bindtap="onBook">去活动预约</button>
+  <button class="cta cta-ghost" style="margin-top:20rpx;" bindtap="onPrice">查看价目表</button>
+  <view class="bottom"></view>
+</scroll-view>

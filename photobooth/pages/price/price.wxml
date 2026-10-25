@@ -1,0 +1,34 @@
+<scroll-view scroll-y class="page price-page" enhanced show-scrollbar="{{false}}">
+  <view class="card hero-brand">
+    <view class="logo">{{brandShort}}</view>
+    <text class="name">{{brandShort}}</text>
+    <text class="en">photo booth</text>
+  </view>
+
+  <view class="card">
+    <text class="block-title">PHOTO BOOTH 租赁套餐</text>
+    <view class="early">{{earlyBirdNote}}</view>
+    <view class="pkg" wx:for="{{packages}}" wx:key="hours">
+      <text class="pkg-h">{{item.hours}} 小时</text>
+      <view class="pkg-price">
+        <text class="now">¥{{item.early}}</text>
+        <text class="old">¥{{item.price}}</text>
+      </view>
+      <text class="pkg-tag">早鸟价</text>
+    </view>
+    <view class="pkg custom">
+      <text class="pkg-h">活动主题定制</text>
+      <text class="pkg-tag">价格面议</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="block-title">服务说明</text>
+    <text class="p">服务城市：{{areas}}</text>
+    <text class="p" wx:for="{{priceNotes}}" wx:key="*this">{{item}}</text>
+    <text class="p">定金参考：¥{{deposit}}</text>
+  </view>
+
+  <button class="cta" bindtap="onBook">去预约档期</button>
+  <view class="bottom"></view>
+</scroll-view>

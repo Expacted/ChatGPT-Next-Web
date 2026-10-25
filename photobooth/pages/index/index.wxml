@@ -1,0 +1,36 @@
+<view class="page hero">
+  <view class="hero-glow"></view>
+  <view class="top-space"></view>
+
+  <view class="brand-block">
+    <text class="brand">一刻</text>
+    <text class="brand-en">YIKE PHOTOBOOTH</text>
+  </view>
+
+  <view class="invite-banner" wx:if="{{fromInvite}}">
+    好友邀请码 {{fromInvite}} · 欢迎来拍
+  </view>
+
+  <view class="hero-visual" aria-hidden="true">
+    <view class="strip-mock">
+      <view class="slot s1"></view>
+      <view class="slot s2"></view>
+      <view class="slot s3"></view>
+      <view class="slot s4"></view>
+      <text class="strip-label">一刻</text>
+    </view>
+  </view>
+
+  <view class="copy">
+    <text class="headline">拍下此刻，\n拼成一条回忆。</text>
+    <text class="sub">拍摄 · 预约 · 分享推广\n先跑通流程，预约可开微信提醒</text>
+  </view>
+
+  <button class="cta" bindtap="onStart">开始拍摄</button>
+  <view class="action-row">
+    <button class="cta cta-ghost action-btn" bindtap="onBook">预约档期</button>
+    <button class="cta cta-ghost action-btn" bindtap="onPromo">分享推广</button>
+  </view>
+  <view class="hint" bindtap="onMyBookings">我的预约 ›</view>
+  <view class="safe-bottom"></view>
+</view>

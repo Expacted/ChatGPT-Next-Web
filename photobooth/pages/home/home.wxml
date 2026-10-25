@@ -1,0 +1,65 @@
+<scroll-view scroll-y class="page home-page" enhanced show-scrollbar="{{false}}">
+  <view class="hero">
+    <view class="hero-deco"></view>
+    <text class="hero-slogan">{{slogan}}</text>
+    <view class="hero-tags">
+      <text wx:for="{{tags}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="brand-card card">
+    <view class="brand-row">
+      <view class="logo">{{brandShort}}</view>
+      <view class="brand-meta">
+        <text class="brand-name">{{brand}}</text>
+        <text class="brand-area">服务城市 {{areas}}</text>
+      </view>
+    </view>
+    <view class="contact-row">
+      <text class="phone" bindtap="onCall">☎ {{phone}}</text>
+      <view class="socials">
+        <view class="soc" bindtap="onShare">微信</view>
+        <view class="soc" bindtap="onCopyLink">小红书</view>
+        <view class="soc" bindtap="onCopyLink">抖音</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="quick-grid">
+    <view class="quick" bindtap="onAbout">
+      <view class="qicon c1">介</view>
+      <text>品牌介绍</text>
+    </view>
+    <view class="quick" bindtap="onBook">
+      <view class="qicon c2">约</view>
+      <text>活动预约</text>
+    </view>
+    <view class="quick" bindtap="onShoot">
+      <view class="qicon c3">拍</view>
+      <text>现场体验</text>
+    </view>
+    <view class="quick" bindtap="onFeed">
+      <view class="qicon c4">评</view>
+      <text>店铺动态</text>
+    </view>
+  </view>
+
+  <view
+    class="content-card card"
+    wx:for="{{cards}}"
+    wx:key="id"
+    data-link="{{item.link}}"
+    bindtap="onCard"
+  >
+    <view class="content-cover {{item.id === 'price' ? 'cover-b' : 'cover-a'}}">
+      <image wx:if="{{item.cover}}" class="cover-img" src="{{item.cover}}" mode="aspectFill" />
+      <text class="cover-caption">{{item.coverCaption}}</text>
+    </view>
+    <view class="content-body">
+      <text class="content-title">{{item.title}}</text>
+      <text class="content-link">查看详情 ></text>
+    </view>
+  </view>
+
+  <view class="home-bottom"></view>
+</scroll-view>
